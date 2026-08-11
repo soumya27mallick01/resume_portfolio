@@ -1,4 +1,4 @@
-name: Deploy Portfolio to AWS S3 + CloudFront
+name: Deploy Portfolio to GitHub Pages
 
 on:
   push:
@@ -7,19 +7,19 @@ on:
 
 permissions:
   contents: read
+  pages: write
+  id-token: write
 
 concurrency:
-  group: deploy-s3
+  group: pages
   cancel-in-progress: true
 
 env:
-  BUCKET_NAME: soumya-portfolio-site
-  CLOUDFRONT_DISTRIBUTION_ID: YOUR_DISTRIBUTION_ID
   NODE_VERSION: '20'
 
 jobs:
-  build-and-deploy:
-    name: Build & Deploy
+  build:
+    name: Build
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
@@ -37,62 +37,27 @@ jobs:
       - name: Run unit tests
         run: npx ng test --watch=false --browsers=ChromeHeadless
 
-      - name: Build Angular application (production + prerender)
-        run: npx ng build
+      - name: Build Angular application for GitHub Pages
+        run: npx ng build --base-href /${{ github.event.repository.name }}/
 
       - name: Verify build output
         run: |
           test -f dist/angularApp/browser/index.html
-          test -f dist/angularApp/browser/manifest.webmanifest
+          grep -q 'base href="/${{ github.event.repository.name }}/"' dist/angularApp/browser/index.html
 
-      - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v4
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
         with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: ${{ secrets.AWS_REGION }}
+          path: dist/angularApp/browser
 
-      - name: Sync build output to S3
-        run: |
-          aws s3 sync dist/angularApp/browser/ s3://${{ env.BUCKET_NAME }}/ \
-            --delete \
-            --exclude "server/*" \
-            --cache-control "public, max-age=31536000, immutable" \
-            --no-progress
-
-      - name: Apply cache rules for HTML and service worker files
-        run: |
-          # index.html must never be cached long-term — it references hashed chunks
-          aws s3 cp s3://${{ env.BUCKET_NAME }}/index.html s3://${{ env.BUCKET_NAME }}/index.html \
-            --cache-control "no-cache, no-store, must-revalidate" \
-            --metadata-directive REPLACE
-
-          # Service worker + manifest: short/no cache so PWA updates propagate
-          if aws s3 ls s3://${{ env.BUCKET_NAME }}/ngsw.json --no-paginate >/dev/null 2>&1; then
-            aws s3 cp s3://${{ env.BUCKET_NAME }}/ngsw.json s3://${{ env.BUCKET_NAME }}/ngsw.json \
-              --cache-control "no-cache, must-revalidate" \
-              --metadata-directive REPLACE
-          fi
-          aws s3 cp s3://${{ env.BUCKET_NAME }}/manifest.webmanifest s3://${{ env.BUCKET_NAME }}/manifest.webmanifest \
-            --cache-control "no-cache, must-revalidate" \
-            --metadata-directive REPLACE
-
-      - name: Invalidate CloudFront cache (HTTPS + PWA freshness)
-        if: env.CLOUDFRONT_DISTRIBUTION_ID != 'YOUR_DISTRIBUTION_ID'
-        run: |
-          aws cloudfront create-invalidation \
-            --distribution-id ${{ env.CLOUDFRONT_DISTRIBUTION_ID }} \
-            --paths "/*" \
-            --no-cli-pager
-
-      - name: Verify deployment is live
-        if: env.CLOUDFRONT_DISTRIBUTION_ID != 'YOUR_DISTRIBUTION_ID'
-        run: |
-          DOMAIN=$(aws cloudfront get-distribution \
-            --id ${{ env.CLOUDFRONT_DISTRIBUTION_ID }} \
-            --query 'Distribution.DomainName' \
-            --output text)
-          echo "Verifying https://$DOMAIN"
-          sleep 10
-          curl -sSf -o /dev/null "https://$DOMAIN/" --max-time 20
-          curl -sSf -o /dev/null "https://$DOMAIN/manifest.webmanifest" --max-time 20
+  deploy:
+    name: Deploy
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

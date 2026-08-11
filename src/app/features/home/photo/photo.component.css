@@ -215,27 +215,6 @@
   -webkit-box-orient: vertical;
   overflow: hidden;
 }
-.photo__socials {
-  display: flex;
-  gap: 0.75rem;
-  margin-top: 1.2rem;
-}
-.photo__socials a {
-  display: grid;
-  place-items: center;
-  width: 40px;
-  height: 40px;
-  border-radius: 12px;
-  background: var(--surface-2);
-  border: 1px solid var(--border);
-  color: var(--text-muted);
-  transition: color 0.25s ease, border-color 0.25s ease, transform 0.25s var(--ease-out);
-}
-.photo__socials a:hover {
-  color: var(--accent-bright);
-  border-color: color-mix(in srgb, var(--accent) 45%, transparent);
-  transform: translateY(-3px);
-}
 .photo__facts {
   display: flex;
   flex-direction: column;

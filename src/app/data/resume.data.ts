@@ -35,14 +35,14 @@ export const profile: Profile = {
   email: 'soumya27mallick01@gmail.com',
   emailHref: 'mailto:soumya27mallick01@gmail.com',
   location: 'India',
-  linkedin: 'https://linkedin.com/in/soumya-kumar-mallick',
-  github: 'https://github.com/your-github-username', // PLACEHOLDER: not present in resume
+  linkedin: 'https://www.linkedin.com/in/soumya-kumar-mallick-07b5921b3/',
+  github: 'https://github.com/soumya27mallick01',
   resumeUrl: 'assets/resume/SoumyaKumarMallick_Resume.pdf',
 };
 
 export const stats: Stat[] = [
   { value: 5, suffix: '+', label: 'Years of Experience' },
-  { value: 6, suffix: '', label: 'Enterprise Applications' },
+  { value: 4, suffix: '', label: 'Enterprise Applications' },
   { value: 3, suffix: '', label: 'Government Platforms' },
   { value: 20, suffix: '+', label: 'Technologies' },
 ];
@@ -326,6 +326,7 @@ export const education: Education[] = [
     institution: 'Vidyasagar University',
     period: 'Sep 2017 – Sep 2020',
     location: 'Medinipur, India',
+    score: 'Marks: 75.80%',
   },
   {
     degree: 'Bachelor of Computer Application',

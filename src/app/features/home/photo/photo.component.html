@@ -54,17 +54,6 @@
         <p class="photo__card-text">
           {{ profile.summary }}
         </p>
-        <div class="photo__socials">
-          <a [href]="profile.linkedin" target="_blank" rel="noopener" aria-label="LinkedIn profile">
-            <app-icon name="linkedin" [size]="17" />
-          </a>
-          <a [href]="profile.github" target="_blank" rel="noopener" aria-label="GitHub profile">
-            <app-icon name="github" [size]="17" />
-          </a>
-          <a appMailLink [mailHref]="profile.emailHref" aria-label="Send an email">
-            <app-icon name="mail" [size]="17" />
-          </a>
-        </div>
       </div>
 
       <div class="photo__facts glass-card">

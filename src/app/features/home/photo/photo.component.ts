@@ -5,7 +5,6 @@ import { IconComponent } from '../../../shared/components/icon/icon.component';
 import { SectionHeaderComponent } from '../../../shared/components/section-header/section-header.component';
 import { RevealDirective } from '../../../shared/directives/reveal.directive';
 import { TiltDirective } from '../../../shared/directives/tilt.directive';
-import { MailLinkDirective } from '../../../shared/directives/mail-link.directive';
 
 /**
  * 3D animated photo section. Drop your portrait at `public/assets/photo/profile.jpg`
@@ -15,7 +14,7 @@ import { MailLinkDirective } from '../../../shared/directives/mail-link.directiv
 @Component({
   selector: 'app-photo',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [IconComponent, SectionHeaderComponent, RevealDirective, TiltDirective, MailLinkDirective],
+  imports: [IconComponent, SectionHeaderComponent, RevealDirective, TiltDirective],
   host: {
     class: 'section',
     id: 'photo',

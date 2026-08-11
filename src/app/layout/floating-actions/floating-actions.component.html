@@ -1,6 +1,21 @@
+<span
+  class="fab-label"
+  [class.fab-label--visible]="sectionLabel() !== null && progress.scrolledPastThreshold()"
+>
+  @if (sectionLabel(); as label) {
+    @for (section of [label]; track section) {
+      <span class="fab-label__pill">
+        <app-icon [name]="sectionIcon()" [size]="12" />
+        {{ label }}
+      </span>
+    }
+  }
+</span>
+
 <button
   class="fab"
   [class.fab--visible]="progress.scrolledPastThreshold()"
+  [class.fab--snap]="snap()"
   (click)="scrollToTop()"
   [attr.aria-label]="'Back to top'"
 >

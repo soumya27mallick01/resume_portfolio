@@ -1,0 +1,40 @@
+<div class="command-palette__backdrop" (click)="close()" (keydown.escape)="close()"></div>
+<div
+  class="command-palette__panel"
+  role="dialog"
+  aria-modal="true"
+  [attr.aria-label]="'Command palette'"
+  (keydown.arrow-down)="move(1, $event)"
+  (keydown.arrow-up)="move(-1, $event)"
+  (keydown.enter)="select(highlighted(), $event)"
+>
+  <div class="command-palette__input">
+    <app-icon name="search" [size]="18" />
+    <input
+      #input
+      type="text"
+      placeholder="Type a section or command…"
+      aria-label="Search sections and commands"
+      (input)="query.set(input.value)"
+    />
+    <kbd>ESC</kbd>
+  </div>
+  <ul class="command-palette__list" role="listbox" data-lenis-prevent>
+    @for (item of filtered(); track item.type + item.label; let i = $index) {
+      <li
+        class="command-palette__item"
+        [class.is-active]="highlighted() === i"
+        [attr.aria-selected]="highlighted() === i"
+        role="option"
+        (mouseenter)="highlighted.set(i)"
+        (mousedown)="select(i)"
+      >
+        <span class="command-palette__item-icon"><app-icon [name]="item.icon" [size]="16" /></span>
+        <span class="command-palette__item-label">{{ item.label }}</span>
+        <span class="command-palette__item-hint">{{ item.hint }}</span>
+      </li>
+    } @empty {
+      <li class="command-palette__empty">No matches found</li>
+    }
+  </ul>
+</div>

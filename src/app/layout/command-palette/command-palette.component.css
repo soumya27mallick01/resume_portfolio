@@ -1,0 +1,104 @@
+:host {
+  display: none;
+}
+:host(.command-palette--open) {
+  display: block;
+}
+.command-palette__backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 950;
+  background: color-mix(in srgb, var(--bg) 60%, transparent);
+  backdrop-filter: blur(6px);
+}
+.command-palette__panel {
+  position: fixed;
+  top: 18vh;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 960;
+  width: min(560px, calc(100vw - 2rem));
+  border-radius: 1.2rem;
+  background: var(--surface-glass-strong);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow-lg);
+  backdrop-filter: blur(24px);
+  overflow: hidden;
+  animation: palette-in 0.25s cubic-bezier(0.22, 1, 0.36, 1);
+}
+@keyframes palette-in {
+  from { opacity: 0; transform: translateX(-50%) translateY(-14px) scale(0.97); }
+  to { opacity: 1; transform: translateX(-50%) translateY(0) scale(1); }
+}
+.command-palette__input {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  padding: 1rem 1.1rem;
+  border-bottom: 1px solid var(--border);
+  color: var(--text-muted);
+}
+.command-palette__input input {
+  flex: 1;
+  border: none;
+  outline: none;
+  background: transparent;
+  color: var(--text);
+  font-size: 1rem;
+  font-family: inherit;
+}
+.command-palette__input input::placeholder {
+  color: var(--text-faint);
+}
+kbd {
+  padding: 0.2rem 0.5rem;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  font-size: 0.7rem;
+  color: var(--text-faint);
+  background: var(--surface-2);
+}
+.command-palette__list {
+  list-style: none;
+  margin: 0;
+  padding: 0.5rem;
+  max-height: 46vh;
+  overflow-y: auto;
+}
+.command-palette__item {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  padding: 0.65rem 0.8rem;
+  border-radius: 0.75rem;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+.command-palette__item.is-active {
+  background: color-mix(in srgb, var(--accent) 14%, transparent);
+}
+.command-palette__item-icon {
+  display: grid;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  border-radius: 8px;
+  background: var(--surface-2);
+  color: var(--accent);
+}
+.command-palette__item-label {
+  flex: 1;
+  color: var(--text);
+  font-size: 0.92rem;
+  font-weight: 500;
+}
+.command-palette__item-hint {
+  font-size: 0.72rem;
+  color: var(--text-faint);
+}
+.command-palette__empty {
+  padding: 1rem;
+  text-align: center;
+  color: var(--text-faint);
+  font-size: 0.9rem;
+}

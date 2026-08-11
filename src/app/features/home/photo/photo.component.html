@@ -1,0 +1,90 @@
+<div class="container">
+  <app-section-header
+    icon="user"
+    eyebrow="Portfolio"
+    title="The Face Behind the Code"
+    subtitle="A closer look at the person shipping pixels — hover the frame for a 3D spin."
+  />
+
+  <div class="photo__stage">
+    <div class="photo__frame-wrap" appReveal direction="left">
+      <div class="photo__halo" aria-hidden="true"></div>
+      <div class="photo__ring" aria-hidden="true"></div>
+
+      <div class="photo__frame" appTilt [maxTilt]="7">
+        <div class="photo__inner">
+          @if (photoOk()) {
+            <img
+              class="photo__img"
+              [src]="photoSrc"
+              alt="{{ profile.firstName }} portrait"
+              (error)="onPhotoError()"
+            />
+          } @else {
+            <div class="photo__fallback">
+              <span class="photo__fallback-initials" aria-hidden="true">{{ initials }}</span>
+              <p class="photo__fallback-note">Add your photo at {{ photoHint }}</p>
+            </div>
+          }
+          <div class="photo__scanline" aria-hidden="true"></div>
+          <div class="photo__shade" aria-hidden="true"></div>
+        </div>
+        <div class="photo__shine" aria-hidden="true"></div>
+      </div>
+
+      <div class="photo__chip photo__chip--1" aria-hidden="true">
+        <app-icon name="award" [size]="15" /><span>5+ Years</span>
+      </div>
+      <div class="photo__chip photo__chip--2" aria-hidden="true">
+        <app-icon name="map-pin" [size]="15" /><span>{{ profile.location }}</span>
+      </div>
+      <div class="photo__chip photo__chip--3" aria-hidden="true">
+        <app-icon name="zap" [size]="15" /><span>Angular · React</span>
+      </div>
+      <div class="photo__chip photo__chip--4" aria-hidden="true">
+        <app-icon name="globe" [size]="15" /><span>Open to Work</span>
+      </div>
+    </div>
+
+    <div class="photo__side" appReveal direction="right" [delay]="150">
+      <div class="photo__card glass-card">
+        <p class="photo__card-label"><app-icon name="sparkles" [size]="14" /> About the photo</p>
+        <h3 class="photo__card-name">{{ profile.name }}</h3>
+        <p class="photo__card-role">{{ profile.title }}</p>
+        <p class="photo__card-text">
+          {{ profile.summary }}
+        </p>
+        <div class="photo__socials">
+          <a [href]="profile.linkedin" target="_blank" rel="noopener" aria-label="LinkedIn profile">
+            <app-icon name="linkedin" [size]="17" />
+          </a>
+          <a [href]="profile.github" target="_blank" rel="noopener" aria-label="GitHub profile">
+            <app-icon name="github" [size]="17" />
+          </a>
+          <a appMailLink [mailHref]="profile.emailHref" aria-label="Send an email">
+            <app-icon name="mail" [size]="17" />
+          </a>
+        </div>
+      </div>
+
+      <div class="photo__facts glass-card">
+        <div class="photo__fact">
+          <app-icon name="briefcase" [size]="16" />
+          <span><b>Role</b> {{ profile.title }}</span>
+        </div>
+        <div class="photo__fact">
+          <app-icon name="map-pin" [size]="16" />
+          <span><b>Based in</b> {{ profile.location }}</span>
+        </div>
+        <div class="photo__fact">
+          <app-icon name="mail" [size]="16" />
+          <span><b>Email</b> {{ profile.email }}</span>
+        </div>
+        <div class="photo__fact">
+          <app-icon name="award" [size]="16" />
+          <span><b>Stack</b> Angular · React · TypeScript</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

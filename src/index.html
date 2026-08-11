@@ -1,11 +1,77 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" data-theme="dark">
 <head>
-  <meta charset="utf-8">
-  <title>AngularApp</title>
-  <base href="/">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="icon" type="image/x-icon" href="favicon.ico">
+  <meta charset="utf-8" />
+  <base href="/" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="icon" type="image/jpeg" href="assets/photo/profile.jpg" />
+  <link rel="apple-touch-icon" href="assets/photo/profile.jpg" />
+  <link rel="manifest" href="manifest.webmanifest" />
+  <meta name="theme-color" content="#050816" />
+
+  <title>Soumya Kumar Mallick — Senior Frontend Developer | Angular & React.js</title>
+  <meta
+    name="description"
+    content="Senior Frontend Developer with 5+ years building enterprise and government platforms. Angular, React.js, TypeScript, payment gateways, and performance optimization."
+  />
+  <meta
+    name="keywords"
+    content="Soumya Kumar Mallick, Angular Developer, React Developer, Frontend Developer, TypeScript, eChallan, Enterprise Web Applications"
+  />
+  <meta name="author" content="Soumya Kumar Mallick" />
+  <link rel="canonical" href="https://soumya-kumar-mallick.netlify.app/" />
+
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="Soumya Kumar Mallick — Senior Frontend Developer" />
+  <meta
+    property="og:description"
+    content="Angular & React.js | TypeScript | Enterprise Web Applications. 5+ years building government and enterprise platforms."
+  />
+  <meta property="og:url" content="https://soumya-kumar-mallick.netlify.app/" />
+  <meta property="og:image" content="assets/og-image.svg" />
+  <meta property="og:site_name" content="Soumya Kumar Mallick Portfolio" />
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Soumya Kumar Mallick — Senior Frontend Developer" />
+  <meta
+    name="twitter:description"
+    content="Angular & React.js | TypeScript | Enterprise Web Applications."
+  />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap"
+    rel="stylesheet"
+  />
+
+  <script>
+    (function () {
+      try {
+        var stored = localStorage.getItem('portfolio-theme');
+        var theme = stored === 'light' || stored === 'dark' ? stored : null;
+        if (!theme) {
+          theme = 'dark';
+        }
+        document.documentElement.setAttribute('data-theme', theme);
+      } catch (e) {
+        document.documentElement.setAttribute('data-theme', 'dark');
+      }
+    })();
+  </script>
+
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Person",
+      "name": "Soumya Kumar Mallick",
+      "jobTitle": "Senior Frontend Developer",
+      "email": "mailto:soumya27mallick01@gmail.com",
+      "url": "https://soumya-kumar-mallick.netlify.app/",
+      "sameAs": ["https://linkedin.com/in/soumya-kumar-mallick"],
+      "knowsAbout": ["Angular", "React.js", "TypeScript", "RxJS", "NgRx", "Redux", "Payment Gateways", "Enterprise Web Applications"]
+    }
+  </script>
 </head>
 <body>
   <app-root></app-root>

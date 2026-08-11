@@ -1,0 +1,194 @@
+.skills__carousel {
+  position: relative;
+  max-width: 880px;
+  margin: 0 auto;
+  perspective: 1400px;
+}
+.skills__stage {
+  position: relative;
+  height: 400px;
+  transform-style: preserve-3d;
+}
+.skills__group {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: min(430px, 88%);
+  max-height: 100%;
+  overflow: hidden;
+  padding: 1.1rem 1.25rem;
+  cursor: pointer;
+  transform-style: preserve-3d;
+  transition: transform 0.7s var(--ease-out), opacity 0.5s ease, box-shadow 0.4s ease,
+    border-color 0.3s ease;
+  will-change: transform;
+  user-select: none;
+}
+.skills__group--active {
+  border-color: color-mix(in srgb, var(--accent) 40%, var(--border));
+  box-shadow: var(--shadow-lg), 0 0 40px color-mix(in srgb, var(--accent) 16%, transparent);
+}
+.skills__group::before {
+  content: '';
+  position: absolute;
+  top: -80px;
+  right: -80px;
+  width: 200px;
+  height: 200px;
+  border-radius: 50%;
+  background: var(--gradient-accent-soft);
+  filter: blur(60px);
+  opacity: 0.6;
+  pointer-events: none;
+}
+.skills__group-header {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  margin-bottom: 1rem;
+}
+.skills__group-title {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  color: var(--accent);
+}
+.skills__group-title h3 {
+  margin: 0;
+  color: var(--text);
+  font-size: 1.05rem;
+}
+.skills__group-header p {
+  margin: 0;
+  color: var(--text-muted);
+  font-size: 0.82rem;
+}
+.skills__list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+}
+.skill__row {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  margin-bottom: 0.4rem;
+}
+.skill__icon {
+  display: grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 8px;
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  color: var(--accent);
+  box-shadow: 0 4px 12px color-mix(in srgb, var(--accent) 18%, transparent);
+  flex-shrink: 0;
+  will-change: transform;
+  animation: skill-icon-3d 5s ease-in-out infinite;
+}
+.skill__icon:nth-child(2n) { animation-delay: 0.6s; }
+.skill__icon:nth-child(3n) { animation-delay: 1.2s; }
+.skill__icon:nth-child(4n) { animation-delay: 1.8s; }
+@keyframes skill-icon-3d {
+  0%, 100% { transform: perspective(400px) rotateY(-14deg) rotateX(7deg) scale3d(1, 1, 1); }
+  50% { transform: perspective(400px) rotateY(14deg) rotateX(-7deg) scale3d(1.08, 1.08, 1.08); }
+}
+.skill__name {
+  flex: 1;
+  font-size: 0.88rem;
+  font-weight: 500;
+}
+.skill__level {
+  font-size: 0.76rem;
+  font-weight: 600;
+  color: var(--text-faint);
+  font-variant-numeric: tabular-nums;
+}
+.skill__bar {
+  height: 5px;
+  border-radius: 6px;
+  background: var(--surface-2);
+  overflow: hidden;
+}
+.skill__fill {
+  display: block;
+  height: 100%;
+  border-radius: 6px;
+  background: var(--gradient-accent);
+  box-shadow: 0 0 10px color-mix(in srgb, var(--accent) 50%, transparent);
+  width: var(--target);
+  transform: scaleX(0);
+  transform-origin: left;
+  animation: skill-grow 1.1s var(--ease-out) forwards;
+}
+@keyframes skill-grow {
+  from { transform: scaleX(0); }
+  to { transform: scaleX(1); }
+}
+.skills__nav {
+  position: absolute;
+  top: 42%;
+  transform: translateY(-50%);
+  z-index: 20;
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: 1px solid var(--border-strong);
+  background: var(--surface-glass-strong);
+  color: var(--text);
+  cursor: pointer;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  box-shadow: var(--shadow-md);
+  transition: all 0.25s var(--ease-out);
+}
+.skills__nav:hover {
+  background: var(--gradient-accent);
+  color: #fff;
+  border-color: transparent;
+  transform: translateY(-50%) scale(1.08);
+}
+.skills__nav--prev { left: -8px; }
+.skills__nav--next { right: -8px; }
+.skills__dots {
+  display: flex;
+  justify-content: center;
+  gap: 0.5rem;
+  margin-top: 0.4rem;
+}
+.skills__dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 999px;
+  border: none;
+  padding: 0;
+  background: var(--surface-3);
+  cursor: pointer;
+  transition: all 0.3s var(--ease-out);
+}
+.skills__dot--active {
+  width: 24px;
+  background: var(--accent);
+}
+@media (max-width: 640px) {
+  .skills__stage {
+    height: 430px;
+  }
+  .skills__nav {
+    top: 38%;
+    width: 34px;
+    height: 34px;
+  }
+  .skills__nav--prev { left: 2px; }
+  .skills__nav--next { right: 2px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .skill__fill {
+    transform: none;
+    animation: none;
+  }
+}

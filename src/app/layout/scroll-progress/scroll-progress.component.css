@@ -1,0 +1,36 @@
+:host {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 10px;
+  z-index: 1001;
+  pointer-events: none;
+}
+.scroll-progress__line {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 50%;
+  height: 2px;
+  transform: translateY(-50%);
+  background: color-mix(in srgb, var(--accent) 15%, transparent);
+}
+.scroll-progress__comet {
+  position: absolute;
+  top: 50%;
+  width: 0;
+  height: 0;
+  will-change: left;
+}
+.scroll-progress__tail {
+  position: absolute;
+  right: 0;
+  top: 50%;
+  width: 220px;
+  height: 4px;
+  transform: translateY(-50%);
+  background: linear-gradient(270deg, var(--accent), transparent);
+  border-radius: 999px;
+  filter: blur(0.5px);
+}

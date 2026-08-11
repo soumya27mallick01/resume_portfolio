@@ -1,0 +1,150 @@
+<div class="container">
+  <app-section-header
+    icon="mail"
+    eyebrow="Contact"
+    title="Let's Build Something Great"
+    subtitle="Have a role, project, or collaboration in mind? I'd love to hear about it."
+  />
+
+  <div class="contact__grid">
+    <div class="contact__info" appReveal direction="left">
+      <h3 class="contact__heading">Contact Details</h3>
+      <p class="contact__sub">The fastest way to reach me is email — I reply within a day.</p>
+
+      <div class="contact__list">
+        <a class="contact__item glass-card" appMailLink [mailHref]="profile.emailHref">
+          <span class="contact__item-icon"><app-icon name="mail" [size]="18" /></span>
+          <span>
+            <span class="contact__item-label">Email</span>
+            <span class="contact__item-value">{{ profile.email }}</span>
+          </span>
+        </a>
+        <a class="contact__item glass-card" [href]="profile.linkedin" target="_blank" rel="noopener">
+          <span class="contact__item-icon"><app-icon name="linkedin" [size]="18" /></span>
+          <span>
+            <span class="contact__item-label">LinkedIn</span>
+            <span class="contact__item-value">linkedin.com/in/soumya-kumar-mallick</span>
+          </span>
+        </a>
+        <a class="contact__item glass-card" [href]="profile.github" target="_blank" rel="noopener">
+          <span class="contact__item-icon"><app-icon name="github" [size]="18" /></span>
+          <span>
+            <span class="contact__item-label">GitHub</span>
+            <span class="contact__item-value contact__item-value--placeholder">github.com/your-username</span>
+          </span>
+        </a>
+        <div class="contact__item glass-card">
+          <span class="contact__item-icon"><app-icon name="map-pin" [size]="18" /></span>
+          <span>
+            <span class="contact__item-label">Location</span>
+            <span class="contact__item-value">{{ profile.location }}</span>
+          </span>
+        </div>
+      </div>
+
+      <div class="contact__map glass-card">
+        <iframe
+          class="contact__map-frame"
+          [src]="mapSrc"
+          title="Map showing New Delhi, India"
+          loading="lazy"
+          referrerpolicy="no-referrer-when-downgrade"
+          allowfullscreen
+        ></iframe>
+      </div>
+    </div>
+
+    <div class="contact__form-wrap glass-card" appReveal direction="right" [delay]="120">
+      @switch (submitState()) {
+        @case ('success') {
+          <div class="contact__success" role="status">
+            <span class="contact__success-icon"><app-icon name="check" [size]="32" /></span>
+            <h3>Message Sent!</h3>
+            <p>
+              Thanks for reaching out — I'll get back to you at your email as soon as I can.
+            </p>
+            <button class="btn btn--ghost" (click)="resetForm()">Send Another</button>
+          </div>
+        }
+        @default {
+          <form class="contact__form" [formGroup]="form" (ngSubmit)="onSubmit()" novalidate>
+            <div class="contact__row">
+              <div class="contact__field">
+                <label class="contact__label" for="contact-name">Name</label>
+                <input
+                  class="contact__input"
+                  id="contact-name"
+                  type="text"
+                  formControlName="name"
+                  placeholder="Your name"
+                  autocomplete="name"
+                />
+                @if (showError('name')) {
+                  <span class="contact__error" role="alert">Please enter your name.</span>
+                }
+              </div>
+              <div class="contact__field">
+                <label class="contact__label" for="contact-email">Email</label>
+                <input
+                  class="contact__input"
+                  id="contact-email"
+                  type="email"
+                  formControlName="email"
+                  placeholder="you@example.com"
+                  autocomplete="email"
+                />
+                @if (showError('email')) {
+                  <span class="contact__error" role="alert">Please enter a valid email address.</span>
+                }
+              </div>
+            </div>
+
+            <div class="contact__field">
+              <label class="contact__label" for="contact-subject">Subject</label>
+              <input
+                class="contact__input"
+                id="contact-subject"
+                type="text"
+                formControlName="subject"
+                placeholder="What's this about?"
+              />
+              @if (showError('subject')) {
+                <span class="contact__error" role="alert">Please add a subject.</span>
+              }
+            </div>
+
+            <div class="contact__field">
+              <label class="contact__label" for="contact-message">Message</label>
+              <textarea
+                class="contact__input contact__textarea"
+                id="contact-message"
+                formControlName="message"
+                rows="6"
+                placeholder="Tell me about your project or opportunity…"
+              ></textarea>
+              @if (showError('message')) {
+                <span class="contact__error" role="alert">Message must be at least 10 characters.</span>
+              }
+            </div>
+
+            @if (submitState() === 'error') {
+              <div class="contact__form-error" role="alert">
+                <app-icon name="alert" [size]="16" />
+                Something went wrong — please try again or email me directly.
+              </div>
+            }
+
+            <button class="btn btn--primary btn--lg contact__submit" type="submit" [disabled]="submitState() === 'sending'">
+              @if (submitState() === 'sending') {
+                <span class="contact__spinner" aria-hidden="true"></span> Sending…
+              } @else {
+                <app-icon name="send" [size]="17" /> Send Message
+              }
+            </button>
+            <p class="contact__privacy">Your details are only used to reply to this message.</p>
+          </form>
+        }
+      }
+    </div>
+  </div>
+</div>

@@ -1,0 +1,255 @@
+.blog-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.08fr);
+  gap: 1.4rem;
+  align-items: stretch;
+}
+
+/* ---------- 3D stage ---------- */
+.blog-stage {
+  position: relative;
+  min-height: 420px;
+  border-radius: var(--radius-xl);
+  overflow: hidden;
+  border: 1px solid var(--border);
+  background: var(--surface-glass);
+  backdrop-filter: blur(16px) saturate(150%);
+  -webkit-backdrop-filter: blur(16px) saturate(150%);
+  box-shadow: var(--shadow-md);
+  isolation: isolate;
+}
+.blog-stage::before {
+  content: '';
+  position: absolute;
+  inset: -2px;
+  border-radius: inherit;
+  padding: 1px;
+  background: linear-gradient(
+    140deg,
+    color-mix(in srgb, var(--accent) 45%, transparent),
+    transparent 35%,
+    transparent 70%,
+    color-mix(in srgb, var(--accent-purple) 40%, transparent)
+  );
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+  z-index: 4;
+}
+.blog-stage__canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+  display: block;
+}
+.blog-stage__glow {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background:
+    radial-gradient(55% 55% at 50% 45%, color-mix(in srgb, var(--accent) 15%, transparent), transparent 72%),
+    radial-gradient(45% 45% at 22% 76%, color-mix(in srgb, var(--accent-purple) 12%, transparent), transparent 74%);
+}
+.blog-chip {
+  position: absolute;
+  z-index: 3;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  padding: 0.4rem 0.85rem;
+  border-radius: 999px;
+  font-family: ui-monospace, 'SF Mono', Menlo, monospace;
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--text);
+  background: var(--surface-glass-strong);
+  border: 1px solid var(--border-strong);
+  box-shadow: var(--shadow-sm);
+  backdrop-filter: blur(10px);
+  animation: blog-float 6s ease-in-out infinite;
+  will-change: transform;
+}
+.blog-chip__tag {
+  color: var(--text-faint);
+  font-weight: 700;
+}
+.blog-chip--red { color: #f87171; }
+.blog-chip--blue { color: #60a5fa; }
+.blog-chip--cyan { color: var(--accent); }
+.blog-chip--green { color: #34d399; }
+@keyframes chip-float {
+  0%, 100% { transform: translateY(0) rotate(-2deg); }
+  50% { transform: translateY(-14px) rotate(2deg); }
+}
+.blog-stage__footer {
+  position: absolute;
+  left: 1.1rem;
+  right: 1.1rem;
+  bottom: 1.2rem;
+  z-index: 3;
+  display: flex;
+  gap: 0.6rem;
+  flex-wrap: wrap;
+}
+.blog-stage__stat {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.5rem 0.85rem;
+  border-radius: 0.8rem;
+  font-size: 0.76rem;
+  color: var(--text);
+  background: var(--surface-glass-strong);
+  border: 1px solid var(--border);
+  backdrop-filter: blur(10px);
+}
+.blog-stage__stat app-icon {
+  color: var(--accent);
+}
+.blog-stage__stat b {
+  color: var(--text);
+  font-weight: 700;
+}
+
+/* ---------- Editorial list ---------- */
+.blog-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+.blog-row {
+  position: relative;
+  display: flex;
+  align-items: flex-start;
+  gap: 0.9rem;
+  padding: 0.85rem 1.1rem;
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border);
+  background: var(--surface-glass);
+  backdrop-filter: blur(10px);
+  text-decoration: none;
+  color: inherit;
+  overflow: hidden;
+  transition: transform 0.35s var(--ease-out), border-color 0.3s ease,
+    box-shadow 0.35s var(--ease-out);
+}
+.blog-row::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 3px;
+  border-radius: 0 3px 3px 0;
+  background: var(--gradient-accent);
+  transform: scaleY(0);
+  transform-origin: top;
+  transition: transform 0.35s var(--ease-out);
+}
+.blog-row:hover {
+  transform: translateX(6px);
+  border-color: color-mix(in srgb, var(--accent) 35%, var(--border));
+  box-shadow: var(--shadow-md);
+}
+.blog-row:hover::before {
+  transform: scaleY(1);
+}
+.blog-row__index {
+  font-family: var(--font-display);
+  font-size: 0.9rem;
+  font-weight: 800;
+  line-height: 1.4rem;
+  background: var(--gradient-accent);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  flex-shrink: 0;
+}
+.blog-row__arrow {
+  display: grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  margin-top: 0.15rem;
+  border-radius: 9px;
+  border: 1px solid var(--border);
+  color: var(--text-faint);
+  background: var(--surface-2);
+  flex-shrink: 0;
+  transition: color 0.25s ease, background 0.25s ease, transform 0.35s var(--ease-out);
+}
+.blog-row:hover .blog-row__arrow {
+  color: #fff;
+  background: var(--gradient-accent);
+  transform: translateX(3px);
+}
+.blog-row__body {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  min-width: 0;
+}
+.blog-row__meta {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  flex-wrap: wrap;
+}
+.blog-row__category {
+  color: var(--accent);
+  border-color: color-mix(in srgb, var(--accent) 30%, transparent);
+  background: color-mix(in srgb, var(--accent) 8%, transparent);
+  font-size: 0.66rem;
+}
+.blog-row__demo {
+  font-size: 0.62rem;
+  color: var(--text-faint);
+}
+.blog-row__time {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  color: var(--text-faint);
+  font-size: 0.72rem;
+}
+.blog-row__title {
+  font-size: 0.98rem;
+  font-weight: 700;
+  line-height: 1.35;
+  transition: color 0.25s ease;
+}
+.blog-row:hover .blog-row__title {
+  color: var(--accent);
+}
+.blog-row__excerpt {
+  color: var(--text-muted);
+  font-size: 0.8rem;
+  line-height: 1.55;
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+@media (max-width: 960px) {
+  .blog-layout {
+    grid-template-columns: 1fr;
+    gap: 1.2rem;
+  }
+  .blog-stage {
+    min-height: 320px;
+  }
+}
+@media (max-width: 520px) {
+  .blog-stage {
+    min-height: 280px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .blog-chip {
+    animation: none;
+  }
+}

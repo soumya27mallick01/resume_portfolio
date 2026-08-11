@@ -1,0 +1,48 @@
+<div class="container blog-detail__inner">
+  <a class="blog-detail__back btn btn--ghost btn--sm" href="#" (click)="backToBlog($event)">
+    <app-icon name="arrow-left" [size]="15" /> Back to Blog
+  </a>
+
+  @if (post(); as post) {
+    <article class="blog-detail__article glass-card" appReveal direction="up">
+      <header class="blog-detail__header">
+        <div class="blog-detail__top">
+          <span class="chip blog-detail__category">{{ post.category }}</span>
+          <!-- @if (post.demo) {
+            <span class="chip">Demo Article</span>
+          } -->
+        </div>
+        <h1 class="blog-detail__title">{{ post.title }}</h1>
+        <div class="blog-detail__meta">
+          <span><app-icon name="calendar" [size]="14" /> {{ date() }}</span>
+          <span><app-icon name="clock" [size]="14" /> {{ post.readTime }}</span>
+          <span><app-icon name="user" [size]="14" /> Soumya Kumar Mallick</span>
+        </div>
+      </header>
+
+      @for (paragraph of post.body; track paragraph) {
+        <p class="blog-detail__paragraph">{{ paragraph }}</p>
+      }
+
+      <footer class="blog-detail__footer">
+        <div class="blog-detail__tags">
+          @for (tag of post.tags; track tag) {
+            <span class="chip chip--tech">{{ tag }}</span>
+          }
+        </div>
+        @if (post.demo) {
+          <p class="blog-detail__demo-note">
+            <app-icon name="info" [size]="14" />
+            <!-- This is placeholder demo content. Replace with the full article. -->
+          </p>
+        }
+      </footer>
+    </article>
+  } @else {
+    <div class="blog-detail__missing">
+      <app-icon name="book" [size]="40" />
+      <h2>Article not found</h2>
+      <a class="btn btn--primary" href="#" (click)="backToBlog($event)">Browse Articles</a>
+    </div>
+  }
+</div>

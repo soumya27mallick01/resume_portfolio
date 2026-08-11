@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://soumya-kumar-mallick.netlify.app/sitemap.xml

@@ -1,0 +1,16 @@
+<div class="error-page__inner">
+  <span class="offline__icon" aria-hidden="true"><app-icon name="refresh" [size]="44" /></span>
+  <h1 class="error-page__title">You're Offline</h1>
+  <p class="error-page__text">
+    It looks like you've lost your connection. Check your network and try again —
+    your device will automatically reload this page when you're back online.
+  </p>
+  <div class="error-page__actions">
+    <a class="btn btn--primary" routerLink="/">
+      <app-icon name="home" [size]="17" /> Go to Home
+    </a>
+    <button class="btn btn--ghost" (click)="retry()">
+      <app-icon name="refresh" [size]="17" /> Try Again
+    </button>
+  </div>
+</div>

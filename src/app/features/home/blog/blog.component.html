@@ -1,0 +1,68 @@
+<div class="container">
+  <app-section-header
+    icon="book"
+    eyebrow="Blog"
+    title="Writing & Insights"
+    subtitle="Field notes on Angular, React, TypeScript and performance — ideas orbiting my daily work."
+  />
+
+  <div class="blog-layout">
+    <div class="blog-stage" appReveal direction="left">
+      <canvas class="blog-stage__canvas" aria-hidden="true"></canvas>
+      <div class="blog-stage__glow" aria-hidden="true"></div>
+
+      @for (chip of chips; track chip.label) {
+        <div
+          class="blog-chip blog-chip--{{ chip.tone }}"
+          [style.top]="chip.top"
+          [style.left]="chip.left"
+          [style.animation-delay]="chip.delay + 's'"
+          aria-hidden="true"
+        >
+          <span class="blog-chip__tag">#</span>{{ chip.label }}
+        </div>
+      }
+
+      <div class="blog-stage__footer">
+        <div class="blog-stage__stat">
+          <app-icon name="file-text" [size]="14" />
+          <span><b>{{ posts.length }}</b> articles</span>
+        </div>
+        <div class="blog-stage__stat">
+          <app-icon name="clock" [size]="14" />
+          <span><b>{{ avgReadTime }}</b> min avg read</span>
+        </div>
+        <div class="blog-stage__stat">
+          <app-icon name="trending-up" [size]="14" />
+          <span><b>2026</b> season</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="blog-list" appReveal direction="up" [delay]="120">
+      @for (post of posts; track post.slug; let i = $index) {
+        <a class="blog-row" [routerLink]="['/blog', post.slug]">
+          <span class="blog-row__index" aria-hidden="true">{{ pad(i + 1) }}</span>
+          <span class="blog-row__arrow" aria-hidden="true">
+            <app-icon name="arrow-right" [size]="17" />
+          </span>
+          <span class="blog-row__body">
+            <span class="blog-row__meta">
+              <span class="chip blog-row__category">
+                <app-icon name="tag" [size]="11" />{{ post.category }}
+              </span>
+              <!-- @if (post.demo) {
+                <span class="chip blog-row__demo">Demo</span>
+              } -->
+              <span class="blog-row__time">
+                <app-icon name="clock" [size]="12" />{{ post.readTime }}
+              </span>
+            </span>
+            <span class="blog-row__title">{{ post.title }}</span>
+            <span class="blog-row__excerpt">{{ post.excerpt }}</span>
+          </span>
+        </a>
+      }
+    </div>
+  </div>
+</div>

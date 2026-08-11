@@ -1,0 +1,23 @@
+<div class="terminal">
+  <div class="terminal__bar">
+    <div class="terminal__dots"><i></i><i></i><i></i></div>
+    <span class="terminal__title">soumya@portfolio: ~</span>
+  </div>
+  <div class="terminal__body">
+    @for (line of rendered(); track $index) {
+      <div class="terminal__line" [class.terminal__line--cmd]="line.kind === 'cmd'">
+        @if (line.kind === 'cmd') {
+          <span class="terminal__prompt">{{ prompt }}</span>
+        }
+        <span class="terminal__text">{{ line.text }}</span>
+      </div>
+    }
+    @if (typing(); as t) {
+      <div class="terminal__line terminal__line--cmd">
+        <span class="terminal__prompt">{{ prompt }}</span>
+        <span class="terminal__text">{{ t }}</span>
+        <span class="terminal__cursor"></span>
+      </div>
+    }
+  </div>
+</div>

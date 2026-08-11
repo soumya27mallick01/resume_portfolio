@@ -1,0 +1,55 @@
+<div class="footer__scene-wrap" aria-hidden="true">
+  <canvas class="footer__scene" aria-hidden="true"></canvas>
+  <div class="footer__scene-fade" aria-hidden="true"></div>
+</div>
+<div class="footer__wave" aria-hidden="true">
+  <svg viewBox="0 0 1440 120" preserveAspectRatio="none">
+    <path
+      d="M0,64 C240,110 480,20 720,40 C960,60 1200,100 1440,48 L1440,120 L0,120 Z"
+      fill="currentColor"
+    ></path>
+  </svg>
+</div>
+<div class="footer__content">
+  <div class="footer__inner">
+    <div class="footer__brand">
+      <a class="footer__logo" href="#home" (click)="goTo('home', $event)" aria-label="Back to top">
+        <span class="footer__logo-mark" aria-hidden="true"><app-icon name="code" [size]="16" /></span>
+        <span class="gradient-text">Soumya Kumar Mallick</span>
+      </a>
+      <p class="footer__tagline">Senior Frontend Developer crafting enterprise-grade web applications with Angular & React.js.</p>
+      <div class="footer__socials">
+        <a [href]="profile.linkedin" target="_blank" rel="noopener" aria-label="LinkedIn profile">
+          <app-icon name="linkedin" [size]="18" />
+        </a>
+        <a [href]="profile.github" target="_blank" rel="noopener" aria-label="GitHub profile">
+          <app-icon name="github" [size]="18" />
+        </a>
+        <a appMailLink [mailHref]="profile.emailHref" aria-label="Send email">
+          <app-icon name="mail" [size]="18" />
+        </a>
+      </div>
+    </div>
+
+    <nav class="footer__links" [attr.aria-label]="'Footer navigation'">
+      <span class="footer__heading">Quick Links</span>
+      <div class="footer__link-grid">
+        @for (link of navLinks; track link.sectionId) {
+          <a href="#{{ link.sectionId }}" (click)="goTo(link.sectionId, $event)">{{ link.label }}</a>
+        }
+      </div>
+    </nav>
+
+    <div class="footer__contact">
+      <span class="footer__heading">Get In Touch</span>
+      <a appMailLink [mailHref]="profile.emailHref"><app-icon name="mail" [size]="15" />{{ profile.email }}</a>
+      <span><app-icon name="map-pin" [size]="15" />{{ profile.location }}</span>
+    </div>
+  </div>
+  <!-- <div class="footer__bottom">
+    <p>© {{ year }} {{ profile.name }}. Built with Angular 20.</p>
+    <button class="footer__top" (click)="scrollToTop()" aria-label="Back to top">
+      <app-icon name="arrow-up" [size]="16" />
+    </button>
+  </div> -->
+</div>

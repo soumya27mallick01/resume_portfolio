@@ -1,0 +1,12 @@
+<div class="section-header__badge" appReveal direction="down">
+  <app-icon [name]="icon()" [size]="14" />
+  <span>{{ eyebrow() }}</span>
+</div>
+<h2 class="section-header__title" appReveal direction="up" [delay]="80">
+  <span class="gradient-text">{{ title() }}</span>
+</h2>
+@if (subtitle()) {
+  <p class="section-header__subtitle" appReveal direction="up" [delay]="160">
+    {{ subtitle() }}
+  </p>
+}

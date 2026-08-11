@@ -1,0 +1,21 @@
+@if (isBrand()) {
+  <svg class="icon" [attr.width]="size()" [attr.height]="size()" [attr.viewBox]="'0 0 24 24'">
+    <use [attr.href]="brandHref()"></use>
+  </svg>
+} @else {
+  <svg
+    class="icon"
+    [attr.width]="size()"
+    [attr.height]="size()"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    stroke-width="2"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+  >
+    @for (path of paths(); track path) {
+      <path [attr.d]="path" />
+    }
+  </svg>
+}

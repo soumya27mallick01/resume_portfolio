@@ -1,0 +1,35 @@
+<div class="container">
+  <app-section-header
+    icon="graduation-cap"
+    eyebrow="Education"
+    title="Academic Background"
+    subtitle="Postgraduate and undergraduate studies in computer applications."
+  />
+
+  <div class="education__timeline">
+    @for (edu of education; track edu.degree; let i = $index) {
+      <article class="education__item" appReveal [direction]="i % 2 === 0 ? 'left' : 'right'" [delay]="80">
+        <div class="education__node" aria-hidden="true">
+          <app-icon name="graduation-cap" [size]="16" />
+        </div>
+        <div class="education__card glass-card glass-card--hoverable">
+          <span class="education__period">
+            <app-icon name="calendar" [size]="13" /> {{ edu.period }}
+          </span>
+          <h3 class="education__degree">{{ edu.degree }}</h3>
+          <p class="education__institution">{{ edu.institution }}</p>
+          <div class="education__footer">
+            <span class="education__location">
+              <app-icon name="map-pin" [size]="13" /> {{ edu.location }}
+            </span>
+            @if (edu.score) {
+              <span class="education__score">
+                <app-icon name="star" [size]="13" /> {{ edu.score }}
+              </span>
+            }
+          </div>
+        </div>
+      </article>
+    }
+  </div>
+</div>

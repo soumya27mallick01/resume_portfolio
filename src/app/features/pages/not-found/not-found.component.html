@@ -1,0 +1,16 @@
+<div class="error-page__inner">
+  <div class="error-page__code" aria-hidden="true">404</div>
+  <h1 class="error-page__title">Page Not Found</h1>
+  <p class="error-page__text">
+    The page you're looking for doesn't exist or has moved.
+    Let's get you back to something useful.
+  </p>
+  <div class="error-page__actions">
+    <a class="btn btn--primary" routerLink="/">
+      <app-icon name="home" [size]="17" /> Back to Home
+    </a>
+    <a class="btn btn--ghost" href="#" (click)="goToContact($event)">
+      <app-icon name="mail" [size]="17" /> Contact Me
+    </a>
+  </div>
+</div>

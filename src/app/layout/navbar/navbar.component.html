@@ -1,0 +1,88 @@
+<header class="navbar__inner">
+  <a class="navbar__logo" href="#home" (click)="goTo('home', $event)" aria-label="Back to top">
+    <span class="navbar__logo-mark" aria-hidden="true">
+      <app-icon name="code" [size]="18" />
+    </span>
+    <span class="navbar__logo-text">
+      <span class="gradient-text">Soumya</span><span>Kumar</span>
+    </span>
+  </a>
+
+  <nav class="navbar__links" [attr.aria-label]="'Primary navigation'">
+    <span
+      class="navbar__indicator"
+      [style.width.px]="indicator().width"
+      [style.transform]="'translateX(' + indicator().left + 'px)'"
+      [style.opacity]="indicator().opacity"
+      aria-hidden="true"
+    ></span>
+    @for (link of links(); track link.sectionId) {
+      <a
+        class="navbar__link"
+        [class.is-active]="active() === link.sectionId"
+        [attr.aria-current]="active() === link.sectionId ? 'true' : null"
+        (click)="goTo(link.sectionId, $event)"
+      >
+        <span class="navbar__link-label">{{ link.label }}</span>
+      </a>
+    }
+  </nav>
+
+  <div class="navbar__actions">
+    <button
+      class="navbar__search"
+      [attr.aria-label]="'Open command palette (Ctrl+K)'"
+      (click)="openPalette()"
+    >
+      <app-icon name="search" [size]="15" />
+      <kbd>⌘K</kbd>
+    </button>
+    <button
+      class="theme-toggle"
+      [attr.aria-label]="'Theme: ' + themeMode()"
+      (click)="cycleTheme()"
+    >
+      <app-icon [name]="themeIcon()" [size]="17" />
+    </button>
+    <button
+      class="navbar__burger"
+      [attr.aria-label]="menuOpen() ? 'Close menu' : 'Open menu'"
+      [attr.aria-expanded]="menuOpen()"
+      (click)="toggleMenu()"
+    >
+      <span class="burger-line"></span>
+      <span class="burger-line"></span>
+      <span class="burger-line"></span>
+    </button>
+  </div>
+
+  <div class="navbar__progress" aria-hidden="true">
+    <span [style.width.%]="scrollProgress()"></span>
+  </div>
+</header>
+
+@if (menuOpen()) {
+  <nav class="navbar__mobile" [attr.aria-label]="'Mobile navigation'">
+    @for (link of links(); track link.sectionId) {
+      <a
+        class="navbar__mobile-link"
+        [class.is-active]="active() === link.sectionId"
+        (click)="goTo(link.sectionId, $event)"
+      >
+        <app-icon [name]="link.icon" [size]="17" />
+        {{ link.label }}
+      </a>
+    }
+    <div class="navbar__mobile-themes">
+      @for (mode of themeModes; track mode) {
+        <button
+          class="theme-pill"
+          [class.is-active]="themeMode() === mode"
+          (click)="setTheme(mode)"
+        >
+          {{ mode }}
+        </button>
+      }
+    </div>
+  </nav>
+}

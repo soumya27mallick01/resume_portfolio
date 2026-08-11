@@ -1,0 +1,100 @@
+<div class="container">
+  <app-section-header
+    icon="folder"
+    eyebrow="Featured Projects"
+    title="Enterprise Systems I've Built"
+    subtitle="Keep scrolling — the stage hands over from one system to the next, each with its period and tenure."
+  />
+</div>
+
+<div class="proj-pin">
+  <div class="proj-pin__stage">
+    <div class="proj-pin__track">
+      @for (project of projects; track project.name; let i = $index) {
+        <article
+          class="proj-slide"
+          [class.proj-slide--expanded]="expanded() === i"
+          [style.--project-accent]="project.accent"
+        >
+          <div class="proj-slide__visual" aria-hidden="true">
+            <div class="proj-slide__visual-grid"></div>
+            <div class="proj-slide__visual-glow"></div>
+            <div class="proj-slide__visual-bars">
+              @for (bar of bars; track $index) {
+                <span [style.height.%]="bar + (i * 7) % 40"></span>
+              }
+            </div>
+            <span class="proj-slide__ghost">{{ pad(i + 1) }}</span>
+          </div>
+
+          <div class="proj-slide__body">
+            <div class="proj-slide__head">
+              <span class="chip chip--category">
+                <app-icon name="shield" [size]="11" />{{ project.category }}
+              </span>
+              <span class="proj-slide__index">/ {{ pad(i + 1) }}</span>
+            </div>
+
+            <h3 class="proj-slide__name">{{ project.name }}</h3>
+            <p class="proj-slide__tagline">{{ project.tagline }}</p>
+
+            <div class="proj-slide__period">
+              <span class="proj-slide__period-text">
+                <app-icon name="calendar" [size]="12" />{{ project.period }}
+              </span>
+              <span class="chip chip--tenure">{{ tenure(project.period) }}</span>
+            </div>
+
+            <p class="proj-slide__overview">{{ project.overview }}</p>
+
+            <ul class="proj-slide__features">
+              @for (feature of project.features.slice(0, 4); track feature) {
+                <li>
+                  <app-icon name="check" [size]="13" />
+                  <span>{{ feature }}</span>
+                </li>
+              }
+            </ul>
+
+            <div class="proj-slide__footer">
+              <div class="proj-slide__tech">
+                @for (tech of project.technologies; track tech; let t = $index) {
+                  @if (expanded() === i || t < maxTech) {
+                    <span class="chip chip--tech">{{ tech }}</span>
+                  }
+                }
+                @if (project.technologies.length > maxTech) {
+                  <button
+                    class="chip chip--more"
+                    type="button"
+                    (click)="toggleExpand(i)"
+                    [attr.aria-expanded]="expanded() === i"
+                  >
+                    {{ expanded() === i ? 'Hide' : '+' + (project.technologies.length - maxTech) }}
+                    <app-icon name="chevron-down" [size]="11" />
+                  </button>
+                }
+              </div>
+              <span class="proj-slide__hint">
+                <app-icon name="arrow-right" [size]="13" />Keep scrolling
+              </span>
+            </div>
+          </div>
+        </article>
+      }
+    </div>
+
+    <div class="proj-pin__dots" role="tablist" aria-label="Project stage">
+      @for (project of projects; track project.name; let i = $index) {
+        <span
+          class="proj-pin__dot"
+          [class.proj-pin__dot--active]="activeIndex() === i"
+          [style.--project-accent]="project.accent"
+          role="tab"
+          [attr.aria-selected]="activeIndex() === i"
+          [attr.aria-label]="project.name"
+        ></span>
+      }
+    </div>
+  </div>
+</div>

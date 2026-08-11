@@ -1,0 +1,98 @@
+<app-blob-background />
+<app-particles />
+
+<div class="hero__grid-overlay" aria-hidden="true"></div>
+
+<div class="hero__content container">
+  <div class="hero__copy">
+    <p class="hero__greeting" appReveal direction="down">
+      <span class="hero__greeting-dot"></span>
+      Hello, I'm
+      <span class="hero__greeting-sep" aria-hidden="true"></span>
+      <span class="hero__greeting-status">Open to work</span>
+    </p>
+
+    <h1 class="hero__name" appReveal direction="up" [delay]="100" aria-label="{{ profile.name }}">
+      @for (letter of nameLetters; track $index) {
+        <span
+          class="hero__name-letter"
+          [class.hero__name-letter--gradient]="letter.gradient"
+          [style.--i]="$index"
+          >{{ letter.char }}</span
+        >
+      }
+    </h1>
+
+    <div class="hero__role" appReveal direction="up" [delay]="180">
+      <app-icon name="zap" [size]="20" />
+      <app-typing-text [phrases]="profile.roles" />
+    </div>
+
+    <p class="hero__intro" appReveal direction="up" [delay]="260">
+      {{ profile.tagline }} — building mission-critical, enterprise-scale web applications for
+      government and industry with {{ '5+' }} years of hands-on experience.
+    </p>
+
+    <div class="hero__ctas" appReveal direction="up" [delay]="340">
+      <a class="btn btn--primary btn--lg" appMagnetic [href]="profile.resumeUrl" download>
+        <app-icon name="download" [size]="18" /> Download Resume
+      </a>
+      <a class="btn btn--ghost btn--lg" appMagnetic href="#contact" (click)="goTo('contact', $event)">
+        Contact Me
+      </a>
+    </div>
+
+    <div class="hero__socials" appReveal direction="up" [delay]="420">
+      <a [href]="profile.linkedin" target="_blank" rel="noopener" aria-label="LinkedIn profile">
+        <app-icon name="linkedin" [size]="19" />
+      </a>
+      <a [href]="profile.github" target="_blank" rel="noopener" aria-label="GitHub profile">
+        <app-icon name="github" [size]="19" />
+      </a>
+      <a appMailLink [mailHref]="profile.emailHref" aria-label="Send an email">
+        <app-icon name="mail" [size]="19" />
+      </a>
+    </div>
+  </div>
+
+  <div class="hero__stage" appReveal direction="left" [delay]="200" aria-hidden="true">
+    <div class="hero__orb hero__orb--one"></div>
+    <div class="hero__orb hero__orb--two"></div>
+
+    <div class="hero__orbit">
+      <div class="hero__ring"></div>
+      @for (chip of skillChips; track chip.name) {
+        <div
+          class="hero__chip"
+          [style.--angle]="chip.angle + 'deg'"
+          [style.color]="chip.color"
+          [attr.title]="chip.name"
+        >
+          <app-icon [name]="chip.icon" [size]="20" />
+        </div>
+      }
+    </div>
+
+    <div class="hero__terminal-wrap">
+      <div class="hero__card">
+        <app-terminal appTilt />
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="hero__stats container" appReveal direction="up" [delay]="300">
+  @for (stat of stats; track stat.label) {
+    <div class="hero__stat">
+      <div class="hero__stat-value">
+        <app-counter [value]="stat.value" [suffix]="stat.suffix" />
+      </div>
+      <div class="hero__stat-label">{{ stat.label }}</div>
+    </div>
+  }
+</div>
+
+<div class="hero__scroll-hint" appReveal direction="down" [delay]="600" aria-hidden="true">
+  <span class="hero__mouse"><span class="hero__wheel"></span></span>
+  <app-icon name="chevron-down" [size]="16" />
+</div>

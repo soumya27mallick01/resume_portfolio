@@ -1,0 +1,25 @@
+:host {
+  display: inline-block;
+}
+.typing-text__value {
+  white-space: nowrap;
+}
+.typing-text__caret {
+  display: inline-block;
+  width: 3px;
+  height: 1em;
+  margin-left: 3px;
+  vertical-align: -0.12em;
+  border-radius: 2px;
+  background: var(--gradient-accent);
+  animation: caret-blink 0.9s steps(1) infinite;
+}
+@keyframes caret-blink {
+  0%, 45% { opacity: 1; }
+  50%, 95% { opacity: 0; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .typing-text__caret {
+    animation: none;
+  }
+}

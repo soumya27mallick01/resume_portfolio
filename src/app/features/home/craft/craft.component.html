@@ -1,0 +1,55 @@
+<div class="container">
+  <app-section-header
+    icon="layers"
+    eyebrow="Engineering Excellence"
+    title="Turning Complex Requirements into Premium Frontend Experiences"
+    subtitle="From ambiguous briefs to pixel-perfect, high-performance interfaces — a proven process that turns complexity into craft."
+  />
+
+  <div class="craft-bento">
+    <div class="bento-stage">
+      <canvas class="bento-stage__canvas" aria-hidden="true"></canvas>
+      <div class="bento-stage__glow" aria-hidden="true"></div>
+
+      @for (chip of chips; track chip.label) {
+        <div
+          class="bento-chip bento-chip--{{ chip.tone }}"
+          [style.top]="chip.top"
+          [style.left]="chip.left"
+          [style.animation-delay]="chip.delay + 's'"
+          aria-hidden="true"
+        >
+          <app-icon [name]="chip.icon" [size]="14" />
+          <span>{{ chip.label }}</span>
+        </div>
+      }
+    </div>
+
+    @for (step of steps; track step.title; let i = $index) {
+      <article
+        class="bento-step bento-step--{{ STEP_SLOTS[i] }}"
+        appReveal direction="left"
+        [delay]="i * 90"
+      >
+        <div class="bento-step__top">
+          <span class="bento-step__num">0{{ i + 1 }}</span>
+          <app-icon [name]="step.icon" [size]="18" class="bento-step__icon" />
+        </div>
+        <h3>{{ step.title }}</h3>
+        <p>{{ step.text }}</p>
+      </article>
+    }
+
+    <a class="bento-quote" href="#projects" (click)="goTo($event)" appReveal direction="zoom">
+      <p>
+        Great interfaces aren't accidents. They're the result of an obsessive process —
+        turning vague requirements into systems, and systems into experiences people
+        remember.
+      </p>
+      <span class="bento-quote__cta">
+        See the work
+        <app-icon name="arrow-right" [size]="15" />
+      </span>
+    </a>
+  </div>
+</div>

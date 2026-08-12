@@ -77,11 +77,11 @@
 .bento-chip app-icon {
   color: var(--text-muted);
 }
-.bento-chip--red app-icon { color: #f87171; }
-.bento-chip--blue app-icon { color: #60a5fa; }
+.bento-chip--red app-icon { color: var(--chip-red); }
+.bento-chip--blue app-icon { color: var(--chip-blue); }
 .bento-chip--cyan app-icon { color: var(--accent); }
-.bento-chip--green app-icon { color: #34d399; }
-.bento-chip--purple app-icon { color: #c084fc; }
+.bento-chip--green app-icon { color: var(--chip-green); }
+.bento-chip--purple app-icon { color: var(--chip-purple); }
 @keyframes chip-float {
   0%, 100% { transform: translateY(0) rotate(-2deg); }
   50% { transform: translateY(-14px) rotate(2deg); }

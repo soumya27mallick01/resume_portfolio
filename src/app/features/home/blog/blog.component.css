@@ -76,10 +76,10 @@
   color: var(--text-faint);
   font-weight: 700;
 }
-.blog-chip--red { color: #f87171; }
-.blog-chip--blue { color: #60a5fa; }
+.blog-chip--red { color: var(--chip-red); }
+.blog-chip--blue { color: var(--chip-blue); }
 .blog-chip--cyan { color: var(--accent); }
-.blog-chip--green { color: #34d399; }
+.blog-chip--green { color: var(--chip-green); }
 @keyframes chip-float {
   0%, 100% { transform: translateY(0) rotate(-2deg); }
   50% { transform: translateY(-14px) rotate(2deg); }

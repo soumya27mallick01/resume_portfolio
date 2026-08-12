@@ -70,7 +70,7 @@
   width: 9px;
   height: 9px;
   border-radius: 50%;
-  background: #34d399;
+  background: var(--success);
   animation: dot-pulse 2s ease-out infinite;
 }
 .hero__greeting-sep {
@@ -79,11 +79,11 @@
   background: var(--border-strong);
 }
 .hero__greeting-status {
-  color: #34d399;
+  color: var(--success);
   font-weight: 600;
 }
 @keyframes dot-pulse {
-  0% { box-shadow: 0 0 0 0 color-mix(in srgb, #34d399 55%, transparent); }
+  0% { box-shadow: 0 0 0 0 color-mix(in srgb, var(--success) 55%, transparent); }
   70% { box-shadow: 0 0 0 9px transparent; }
   100% { box-shadow: 0 0 0 0 transparent; }
 }

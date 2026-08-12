@@ -76,7 +76,7 @@
   font-size: 0.82rem;
 }
 .education__score {
-  color: #f59e0b;
+  color: var(--warn);
   font-weight: 600;
 }
 @media (min-width: 768px) {

@@ -201,7 +201,7 @@
 }
 .photo__card-role {
   margin: 0 0 1rem;
-  color: var(--accent-bright);
+  color: var(--accent-text);
   font-weight: 600;
   font-size: 0.95rem;
 }

@@ -41,11 +41,11 @@ export class HeroComponent {
   protected readonly skillChips = this.buildSkillChips();
 
   private static readonly CHIP_COLORS = [
-    'var(--accent)',
-    '#818cf8',
-    '#c084fc',
-    '#34d399',
-    '#fbbf24',
+    'var(--scene-1)',
+    'var(--scene-2)',
+    'var(--scene-3)',
+    'var(--scene-4)',
+    'var(--scene-5)',
   ];
 
   private buildSkillChips(): { name: string; icon: string; angle: number; color: string }[] {

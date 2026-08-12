@@ -89,6 +89,13 @@ html.lenis body {
   --scene-3: #c084fc;
   --scene-4: #34d399;
   --scene-5: #fbbf24;
+  --success: #34d399;
+  --warn: #f59e0b;
+  --accent-text: #67e8f9;
+  --chip-red: #f87171;
+  --chip-blue: #60a5fa;
+  --chip-green: #34d399;
+  --chip-purple: #c084fc;
   color-scheme: dark;
 }
 
@@ -104,7 +111,7 @@ html.lenis body {
   --surface-3: #e2e8f0;
   --text: #0f172a;
   --text-muted: #475569;
-  --text-faint: #94a3b8;
+  --text-faint: #64748b;
   --border: rgba(15, 23, 42, 0.1);
   --border-strong: rgba(15, 23, 42, 0.2);
   --accent: #0891b2;
@@ -113,7 +120,7 @@ html.lenis body {
   --accent-blue: #0891b2;
   --accent-purple: #06b6d4;
   --accent-cyan: #0e7490;
-  --gradient-accent: linear-gradient(120deg, var(--accent), var(--accent-bright) 55%, var(--accent-deep));
+  --gradient-accent: linear-gradient(120deg, var(--accent-deep), var(--accent) 55%, var(--accent-deep));
   --gradient-accent-soft: linear-gradient(120deg, color-mix(in srgb, var(--accent) 16%, transparent), color-mix(in srgb, var(--accent-bright) 16%, transparent));
   --blob-opacity: 0.22;
   --code-bg: rgba(241, 245, 249, 0.85);
@@ -127,6 +134,13 @@ html.lenis body {
   --scene-3: #9333ea;
   --scene-4: #047857;
   --scene-5: #b45309;
+  --success: #059669;
+  --warn: #b45309;
+  --accent-text: #0e7490;
+  --chip-red: #ef4444;
+  --chip-blue: #2563eb;
+  --chip-green: #059669;
+  --chip-purple: #9333ea;
   color-scheme: light;
 }
 

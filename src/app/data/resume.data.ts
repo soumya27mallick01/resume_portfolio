@@ -365,7 +365,7 @@ export const blogPosts: BlogPost[] = [
     excerpt:
       'Architecture patterns, signals, and component design that keep large Angular applications scalable and maintainable.',
     category: 'Angular',
-    date: '2025-10-12',
+    date: '2026-05-10',
     readTime: '6 min read',
     tags: ['Angular', 'Architecture', 'Signals'],
     demo: true,

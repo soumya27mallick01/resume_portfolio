@@ -27,6 +27,7 @@ export class PhotoComponent {
   protected readonly photoSrc = 'assets/photo/profile.jpg';
   protected readonly photoHint = 'assets/photo/profile.jpg';
   protected readonly photoOk = signal(true);
+  protected readonly expanded = signal(false);
 
   protected readonly initials = profile.firstName
     .split(' ')

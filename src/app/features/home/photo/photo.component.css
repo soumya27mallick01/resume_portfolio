@@ -2,7 +2,7 @@
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
   gap: clamp(2.5rem, 6vw, 5rem);
-  align-items: stretch;
+  align-items: center;
 }
 
 /* ---------- 3D frame ---------- */
@@ -180,8 +180,6 @@
   gap: 1.4rem;
 }
 .photo__card {
-  display: flex;
-  flex-direction: column;
   padding: 1.8rem;
 }
 .photo__card-label {
@@ -208,11 +206,44 @@
   font-size: 0.95rem;
 }
 .photo__card-text {
-  flex: 1;
   margin: 0;
   color: var(--text-muted);
   font-size: 0.92rem;
   line-height: 1.7;
+  display: -webkit-box;
+  -webkit-line-clamp: 5;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.photo__card-text--expanded {
+  display: block;
+  overflow: visible;
+  -webkit-line-clamp: unset;
+}
+.photo__card-more {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  margin-top: 1rem;
+  padding: 0;
+  border: none;
+  background: none;
+  color: var(--accent);
+  font-family: inherit;
+  font-size: 0.82rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: opacity 0.25s ease;
+}
+.photo__card-more:hover {
+  opacity: 0.75;
+}
+.photo__card-more app-icon {
+  display: inline-flex;
+  transition: transform 0.3s var(--ease-out);
+}
+.photo__card-more-icon--up {
+  transform: rotate(180deg);
 }
 .photo__facts {
   display: flex;

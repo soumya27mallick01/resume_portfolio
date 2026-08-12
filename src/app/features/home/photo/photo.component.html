@@ -50,9 +50,22 @@
         <p class="photo__card-label"><app-icon name="sparkles" [size]="14" /> About the photo</p>
         <h3 class="photo__card-name">{{ profile.name }}</h3>
         <p class="photo__card-role">{{ profile.title }}</p>
-        <p class="photo__card-text">
+        <p class="photo__card-text" [class.photo__card-text--expanded]="expanded()">
           {{ profile.summary }}
         </p>
+        <button
+          type="button"
+          class="photo__card-more"
+          (click)="expanded.set(!expanded())"
+          [attr.aria-expanded]="expanded()"
+        >
+          {{ expanded() ? 'Show less' : 'Read more' }}
+          <app-icon
+            name="chevron-down"
+            [size]="14"
+            [class.photo__card-more-icon--up]="expanded()"
+          />
+        </button>
       </div>
 
       <div class="photo__facts glass-card">

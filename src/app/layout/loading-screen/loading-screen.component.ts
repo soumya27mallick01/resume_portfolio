@@ -139,16 +139,19 @@ export class LoadingScreenComponent implements OnDestroy {
       const accent = cssVar('--accent', '#22d3ee');
       const accentBright = cssVar('--accent-bright', '#67e8f9');
       const purple = cssVar('--accent-purple', '#06b6d4');
-      const s2 = cssVar('--surface-2', '#0b1128');
-      const s3 = cssVar('--surface-3', '#16224f');
+      const curtain1 = cssVar('--curtain-1', '#16224f');
+      const curtain2 = cssVar('--curtain-2', '#101a3d');
+      const isLight = (document.documentElement.getAttribute('data-theme') ?? 'dark') === 'light';
 
       const hexToRgb01 = (hex: string): [number, number, number] => {
         const n = Number.parseInt(hex.replace('#', ''), 16);
         return [((n >> 16) & 255) / 255, ((n >> 8) & 255) / 255, (n & 255) / 255];
       };
-      const baseTop = hexToRgb01(s3);
-      const baseBottom = hexToRgb01(s2);
-      const sparkColors = [hexToRgb01(accent), hexToRgb01(accentBright), hexToRgb01(purple)];
+      const baseTop = hexToRgb01(curtain1);
+      const baseBottom = hexToRgb01(curtain2);
+      const sparkColors = isLight
+        ? [hexToRgb01('#0e7490'), hexToRgb01('#4f46e5'), hexToRgb01('#9333ea')]
+        : [hexToRgb01(accent), hexToRgb01(accentBright), hexToRgb01(purple)];
 
       const dpr = Math.min(window.devicePixelRatio || 1, 2);
       const scene = new THREE.Scene();
@@ -174,20 +177,22 @@ export class LoadingScreenComponent implements OnDestroy {
           if (/^(#|rgb|hsl|oklch|color\()/i.test(value)) return value;
           return fallback;
         };
-        const top = toCss(s3, 'rgb(22, 34, 79)');
-        const bottom = toCss(s2, 'rgb(11, 17, 40)');
+        const top = toCss(curtain1, 'rgb(22, 34, 79)');
+        const bottom = toCss(curtain2, 'rgb(11, 17, 40)');
         const grad = ctx.createLinearGradient(0, 0, 0, 512);
         grad.addColorStop(0, top);
         grad.addColorStop(0.55, bottom);
         grad.addColorStop(1, bottom);
         ctx.fillStyle = grad;
         ctx.fillRect(0, 0, 128, 512);
+        const weave = isLight ? 'rgba(15, 23, 42, 0.07)' : 'rgba(255,255,255,0.05)';
+        const band = isLight ? 'rgba(15, 23, 42, 0.06)' : 'rgba(120,170,255,0.06)';
         for (let x = 0; x < 128; x += 16) {
-          ctx.fillStyle = 'rgba(255,255,255,0.05)';
+          ctx.fillStyle = weave;
           ctx.fillRect(x, 0, 2, 512);
         }
         for (let y = 0; y < 512; y += 40) {
-          ctx.fillStyle = 'rgba(120,170,255,0.06)';
+          ctx.fillStyle = band;
           ctx.fillRect(0, y, 128, 14);
         }
         const tex = new THREE.CanvasTexture(texCanvas);
@@ -316,8 +321,8 @@ export class LoadingScreenComponent implements OnDestroy {
             size: 3.2 * dpr,
             vertexColors: true,
             transparent: true,
-            opacity: 0.95,
-            blending: THREE.AdditiveBlending,
+            opacity: isLight ? 0.8 : 0.95,
+            blending: isLight ? THREE.NormalBlending : THREE.AdditiveBlending,
             depthWrite: false,
             sizeAttenuation: false,
           }),

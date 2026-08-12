@@ -59,7 +59,11 @@ export class ParticlesComponent {
 
     const draw = (): void => {
       ctx.clearRect(0, 0, width, height);
-      const color = getComputedStyle(document.documentElement).getPropertyValue('--accent').trim() || '#06B6D4';
+      const root = getComputedStyle(document.documentElement);
+      const color = root.getPropertyValue('--accent').trim() || '#06B6D4';
+      const isLight = document.documentElement.getAttribute('data-theme') === 'light';
+      const dotAlpha = isLight ? 0.5 : 0.35;
+      const linkAlpha = isLight ? 0.18 : 0.12;
 
       for (let i = 0; i < particles.length; i++) {
         const p = particles[i];
@@ -71,7 +75,7 @@ export class ParticlesComponent {
         ctx.beginPath();
         ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
         ctx.fillStyle = color;
-        ctx.globalAlpha = 0.35;
+        ctx.globalAlpha = dotAlpha;
         ctx.fill();
 
         for (let j = i + 1; j < particles.length; j++) {
@@ -84,7 +88,7 @@ export class ParticlesComponent {
             ctx.moveTo(p.x, p.y);
             ctx.lineTo(q.x, q.y);
             ctx.strokeStyle = color;
-            ctx.globalAlpha = 0.12 * (1 - dist / this.linkDistance());
+            ctx.globalAlpha = linkAlpha * (1 - dist / this.linkDistance());
             ctx.lineWidth = 0.6;
             ctx.stroke();
           }

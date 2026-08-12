@@ -29,6 +29,8 @@ export class ThreeSceneComponent implements OnDestroy {
   private readonly el = inject(ElementRef<HTMLElement>);
   private cleanup: (() => void) | null = null;
   private destroyed = false;
+  private themeObserver: MutationObserver | null = null;
+  private currentTheme = '';
 
   constructor() {
     afterNextRender(() => {
@@ -38,24 +40,46 @@ export class ThreeSceneComponent implements OnDestroy {
 
   ngOnDestroy(): void {
     this.destroyed = true;
+    this.themeObserver?.disconnect();
     this.cleanup?.();
   }
 
   private async init(): Promise<void> {
     if (typeof WebGLRenderingContext === 'undefined') return;
 
-    const THREE = await import('three');    if (this.destroyed) return;
+    const THREE = await import('three');
+    if (this.destroyed) return;
 
     const canvas = this.el.nativeElement.querySelector('canvas') as HTMLCanvasElement | null;
     if (!canvas) return;
 
+    const start = (): void => this.createScene(THREE, canvas);
+
+    start();
+    this.currentTheme = document.documentElement.getAttribute('data-theme') ?? 'dark';
+
+    if (!this.themeObserver) {
+      this.themeObserver = new MutationObserver(() => {
+        const theme = document.documentElement.getAttribute('data-theme') ?? 'dark';
+        if (theme === this.currentTheme || this.destroyed) return;
+        this.currentTheme = theme;
+        this.cleanup?.();
+        start();
+      });
+      this.themeObserver.observe(document.documentElement, {
+        attributes: true,
+        attributeFilter: ['data-theme'],
+      });
+    }
+  }
+
+  private createScene(THREE: typeof import('three'), canvas: HTMLCanvasElement): void {
     const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    const isLight = (document.documentElement.getAttribute('data-theme') ?? 'dark') === 'light';
 
     const cssVar = (name: string, fallback: string): string =>
       getComputedStyle(document.documentElement).getPropertyValue(name).trim() || fallback;
-    const accent = cssVar('--accent', '#22d3ee');
-    const accentBright = cssVar('--accent-bright', '#67e8f9');
     const bg = cssVar('--bg', '#050816');
     const fogColor = Number.parseInt(bg.replace('#', ''), 16) || 0x050816;
 
@@ -77,7 +101,9 @@ export class ThreeSceneComponent implements OnDestroy {
     const world = new THREE.Group();
     scene.add(world);
 
-    const colors = [accent, accentBright, '#818cf8', '#c084fc', '#34d399'];
+    const colors = ['--scene-1', '--scene-2', '--scene-3', '--scene-4', '--scene-5'].map((v) =>
+      cssVar(v, '#22d3ee'),
+    );
 
     const skillLabels: string[] = [];
     const ABBREV: Record<string, string> = { JAVASCRIPT: 'JS', TYPESCRIPT: 'TS' };
@@ -115,13 +141,20 @@ export class ThreeSceneComponent implements OnDestroy {
       ctx.font = font;
       ctx.textAlign = 'center';
       ctx.textBaseline = 'middle';
-      ctx.shadowColor = color;
-      ctx.shadowBlur = fontSize * 0.10;
-      ctx.fillStyle = color;
-      ctx.fillText(label, width / 2, height / 2);
-      ctx.shadowBlur = 0;
-      ctx.globalAlpha = 0.28;
-      ctx.fillText(label, width / 2, height / 2);
+      if (isLight) {
+        ctx.fillStyle = color;
+        ctx.fillText(label, width / 2, height / 2);
+        ctx.globalAlpha = 0.14;
+        ctx.fillText(label, width / 2, height / 2);
+      } else {
+        ctx.shadowColor = color;
+        ctx.shadowBlur = fontSize * 0.1;
+        ctx.fillStyle = color;
+        ctx.fillText(label, width / 2, height / 2);
+        ctx.shadowBlur = 0;
+        ctx.globalAlpha = 0.28;
+        ctx.fillText(label, width / 2, height / 2);
+      }
       const texture = new THREE.CanvasTexture(c);
       texture.anisotropy = 4;
       return texture;
@@ -148,9 +181,9 @@ export class ThreeSceneComponent implements OnDestroy {
       const material = new THREE.SpriteMaterial({
         map: texture,
         transparent: true,
-        opacity: 0.5 + (i % 3) * 0.14,
+        opacity: isLight ? 0.85 + (i % 3) * 0.05 : 0.5 + (i % 3) * 0.14,
         depthWrite: false,
-        blending: THREE.AdditiveBlending,
+        blending: isLight ? THREE.NormalBlending : THREE.AdditiveBlending,
       });
 
       const sprite = new THREE.Sprite(material);
@@ -185,11 +218,11 @@ export class ThreeSceneComponent implements OnDestroy {
     const stars = new THREE.Points(
       starGeometry,
       new THREE.PointsMaterial({
-        color: accent,
-        size: 0.06,
+        color: new THREE.Color(colors[0]),
+        size: isLight ? 0.07 : 0.06,
         transparent: true,
-        opacity: 0.5,
-        blending: THREE.AdditiveBlending,
+        opacity: isLight ? 0.35 : 0.5,
+        blending: isLight ? THREE.NormalBlending : THREE.AdditiveBlending,
         depthWrite: false,
       }),
     );

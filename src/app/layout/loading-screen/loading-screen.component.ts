@@ -68,18 +68,12 @@ export class LoadingScreenComponent implements OnDestroy {
         '.loading-screen__canvas',
       ) as HTMLCanvasElement | null;
       if (!canvas || typeof WebGLRenderingContext === 'undefined') {
-        window.setTimeout(() => this.finish(true), 900);
+        window.setTimeout(() => this.finish(true), 700);
         return;
       }
 
       this.cleanup = this.initCurtain(canvas);
-      this.webgl.set(true);
-
-      window.setTimeout(() => {
-        if (this.disposed) return;
-        this.revealing.set(true);
-        window.setTimeout(() => this.finish(false), 950);
-      }, 1300);
+      window.setTimeout(() => this.reveal(), 2000);
     });
   }
 
@@ -91,11 +85,17 @@ export class LoadingScreenComponent implements OnDestroy {
   private runCounter(): void {
     const start = performance.now();
     const step = (now: number): void => {
-      const p = Math.min((now - start) / 1250, 1);
+      const p = Math.min((now - start) / 900, 1);
       this.pct.set(Math.round(p * 100));
       if (p < 1 && !this.disposed) requestAnimationFrame(step);
     };
     requestAnimationFrame(step);
+  }
+
+  private reveal(): void {
+    if (this.disposed || this.revealing() || this.revealed()) return;
+    this.revealing.set(true);
+    window.setTimeout(() => this.finish(false), 800);
   }
 
   private finish(immediate: boolean): void {
@@ -356,7 +356,11 @@ export class LoadingScreenComponent implements OnDestroy {
       const onResize = (): void => {
         if (this.revealing()) return;
         panels = [];
-        build();
+build();
+
+        renderer3.render(scene, camera);
+        this.webgl.set(true);
+        window.setTimeout(() => this.reveal(), 650);
       };
       window.addEventListener('resize', onResize);
       removeResize = () => window.removeEventListener('resize', onResize);

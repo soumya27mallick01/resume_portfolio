@@ -1,5 +1,12 @@
-import { ChangeDetectionStrategy, Component, afterNextRender, inject } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  PLATFORM_ID,
+  afterNextRender,
+  inject,
+} from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
+import { Router, RouterOutlet } from '@angular/router';
 import { ScrollSpyService } from './core/services/scroll-spy.service';
 import { ScrollProgressService } from './core/services/scroll-progress.service';
 import { ConnectivityService } from './core/services/connectivity.service';
@@ -12,6 +19,8 @@ import { CommandPaletteComponent } from './layout/command-palette/command-palett
 import { LoadingScreenComponent } from './layout/loading-screen/loading-screen.component';
 import { ScrollProgressComponent } from './layout/scroll-progress/scroll-progress.component';
 import { CustomCursorComponent } from './shared/components/custom-cursor/custom-cursor.component';
+
+const AS_PATH_KEY = 'as-path';
 
 @Component({
   selector: 'app-root',
@@ -34,10 +43,20 @@ export class App {
   protected readonly connectivity = inject(ConnectivityService);
 
   constructor() {
+    const platformId = inject(PLATFORM_ID);
+    const router = inject(Router);
     const scrollSpy = inject(ScrollSpyService);
     const progress = inject(ScrollProgressService);
     const connectivity = inject(ConnectivityService);
     const smoothScroll = inject(SmoothScrollService);
+
+    if (isPlatformBrowser(platformId)) {
+      const asPath = sessionStorage.getItem(AS_PATH_KEY);
+      if (asPath) {
+        sessionStorage.removeItem(AS_PATH_KEY);
+        void router.navigateByUrl(asPath).catch(() => undefined);
+      }
+    }
 
     afterNextRender(() => {
       progress.init();

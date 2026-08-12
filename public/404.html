@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Redirecting…</title>
+  <meta name="robots" content="noindex">
+  <script>
+    (function () {
+      var base = '/resume_portfolio';
+      var path = location.pathname.replace(new RegExp('^' + base), '');
+      if (!path.charAt(0) || path.charAt(0) !== '/') path = '/' + path;
+      try {
+        sessionStorage.setItem('as-path', path + location.search + location.hash);
+      } catch (e) { /* private mode */ }
+      location.replace(base + '/');
+    })();
+  </script>
+</head>
+<body>
+  <noscript>
+    <p><a href="/resume_portfolio/">Return to the portfolio</a></p>
+  </noscript>
+</body>
+</html>

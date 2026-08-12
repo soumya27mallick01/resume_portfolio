@@ -267,8 +267,6 @@ export const skillGroups: SkillGroup[] = [
       { name: 'Redux', level: 85, icon: 'redux' },
       { name: 'NgRx', level: 85, icon: 'layers' },
       { name: 'RxJS', level: 88, icon: 'activity' },
-      { name: 'Reactive Forms', level: 90, icon: 'clipboard' },
-      { name: 'Component-Based Architecture', level: 92, icon: 'layout' },
     ],
   },
   {

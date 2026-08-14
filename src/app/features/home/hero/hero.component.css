@@ -421,6 +421,13 @@
     grid-template-columns: 1fr;
     gap: 1.5rem;
   }
+  /* Single-column hero content is taller than the viewport on phones; center
+     alignment clips the top of the name/role under the fixed navbar. Align to
+     the top instead so content starts below the nav and scrolls naturally. */
+  :host {
+    justify-content: flex-start;
+    padding-top: calc(var(--nav-height) + 2.5rem);
+  }
   .hero__copy {
     align-items: center;
     text-align: center;
@@ -451,6 +458,11 @@
 @media (max-width: 640px) {
   :host {
     padding-bottom: 2rem;
+  }
+}
+@media (max-width: 480px) {
+  .hero__terminal-wrap {
+    display: none;
   }
 }
 @media (min-width: 641px) {

@@ -43,9 +43,15 @@ export class CustomCursorComponent implements AfterViewInit {
   private lastX = 0;
   private lastY = 0;
   private speed = 0;
+  private dirX = 0;
+  private dirY = 0;
   private particles: Particle[] = [];
-  private maxParticles = 35;
+  private maxParticles = 60;
   private initialised = false;
+  private scrollVelocity = 0;
+  private lastScrollY = 0;
+  private scrollY = 0;
+  private targetScrollY = 0;
 
   constructor() {
     afterNextRender(() => this.init());
@@ -76,6 +82,8 @@ export class CustomCursorComponent implements AfterViewInit {
     window.addEventListener('pointerout', this.onOut, { passive: true });
     window.addEventListener('mouseout', this.onOut, { passive: true });
     window.addEventListener('resize', this.resizeCanvas, { passive: true });
+    this.lastScrollY = window.scrollY;
+    window.addEventListener('scroll', this.onScroll, { passive: true });
 
     root.style.display = 'block';
     document.documentElement.classList.add('cursor-custom');
@@ -84,6 +92,8 @@ export class CustomCursorComponent implements AfterViewInit {
     this.y = window.innerHeight / 2;
     this.ringX = this.x;
     this.ringY = this.y;
+    this.scrollY = window.scrollY;
+    this.targetScrollY = this.scrollY;
 
     try {
       this.ctx = this.canvas.getContext('2d');
@@ -109,18 +119,39 @@ export class CustomCursorComponent implements AfterViewInit {
     if (!this.dot) return;
     this.dot.style.left = this.x + 'px';
     this.dot.style.top = this.y + 'px';
-    const scale = Math.min(1 + this.speed * 0.004, 1.3);
+    // Speed scale: the bubble swells slightly with how fast the cursor moves.
+    const speedScale = Math.min(1 + this.speed * 0.004, 1.3);
+    // Scroll scale: small near the top, growing as you scroll down the page,
+    // shrinking again as you scroll back up.
+    const maxScroll = Math.max(1, document.documentElement.scrollHeight - window.innerHeight);
+    const progress = Math.min(1, Math.max(0, this.scrollY / maxScroll));
+    const scrollScale = 1 + progress * 0.8;
+    const scale = speedScale * scrollScale;
+    // Liquid squish: the bubble elongates along the direction of travel.
+    const stretch = Math.min(0.24, this.speed * 0.012);
+    const sx = 1 + Math.abs(this.dirX) * stretch;
+    const sy = 1 + Math.abs(this.dirY) * stretch;
     this.dot.style.setProperty('--cursor-scale', scale.toFixed(3));
+    this.dot.style.setProperty('--cursor-squish-x', sx.toFixed(3));
+    this.dot.style.setProperty('--cursor-squish-y', sy.toFixed(3));
   }
 
   private onMove(clientX: number, clientY: number): void {
+    // The same handler is bound to pointermove + mousemove on several targets;
+    // ignore duplicate deliveries so velocity isn't reset to zero mid-move.
+    if (clientX === this.x && clientY === this.y) return;
     this.lastX = this.x;
     this.lastY = this.y;
     this.x = clientX;
     this.y = clientY;
     const dx = this.x - this.lastX;
     const dy = this.y - this.lastY;
-    this.speed = Math.hypot(dx, dy);
+    const len = Math.hypot(dx, dy);
+    this.speed = len;
+    if (len > 0) {
+      this.dirX = dx / len;
+      this.dirY = dy / len;
+    }
 
     this.renderDot();
     this.spawn();
@@ -134,6 +165,18 @@ export class CustomCursorComponent implements AfterViewInit {
 
   private readonly onOut = (): void => {
     this.el.nativeElement.classList.remove('cursor-hovering');
+  };
+
+  /** Tracks scroll velocity (trail swell) and scroll position (bubble size). */
+  private readonly onScroll = (): void => {
+    const y = window.scrollY;
+    const delta = y - this.lastScrollY;
+    this.lastScrollY = y;
+    this.targetScrollY = y;
+    if (delta !== 0) {
+      const target = Math.max(-6, Math.min(6, delta * 0.5));
+      this.scrollVelocity += (target - this.scrollVelocity) * 0.5;
+    }
   };
 
   private spawn(): void {
@@ -155,6 +198,23 @@ export class CustomCursorComponent implements AfterViewInit {
     }
   }
 
+  /** Larger, slower bubble emitted from the cursor while the page is scrolling. */
+  private spawnScrollBubble(): void {
+    if (this.particles.length >= this.maxParticles) return;
+    const angle = Math.random() * Math.PI * 2;
+    const speed = Math.random() * 0.5 + 0.12;
+    this.particles.push({
+      x: this.x + (Math.random() - 0.5) * 10,
+      y: this.y + (Math.random() - 0.5) * 10,
+      vx: Math.cos(angle) * speed,
+      vy: Math.sin(angle) * speed - 0.4,
+      radius: Math.random() * 2.4 + 1.6,
+      opacity: 0.7,
+      life: 1,
+      maxLife: Math.random() * 45 + 35,
+    });
+  }
+
   private readonly animate = (): void => {
     if (!this.ctx || !this.canvas) return;
     const w = window.innerWidth;
@@ -163,31 +223,58 @@ export class CustomCursorComponent implements AfterViewInit {
 
     const accent = getComputedStyle(document.documentElement).getPropertyValue('--accent').trim() || '#06b6d4';
 
+    // Relax the cursor speed as it settles, then smooth the scroll position
+    // so the bubble's size animates while scrolling instead of snapping.
+    if (this.speed > 0) {
+      this.speed *= 0.9;
+      if (this.speed < 0.15) this.speed = 0;
+    }
+    this.scrollY += (this.targetScrollY - this.scrollY) * 0.1;
+    this.renderDot();
+
+    // Decay scroll velocity; while scrolling down, stream bubbles from the
+    // cursor, and while scrolling up, let the trail quiet down (no new spawns).
+    this.scrollVelocity *= 0.9;
+    if (Math.abs(this.scrollVelocity) < 0.05) this.scrollVelocity = 0;
+    if (this.scrollVelocity > 0.4) {
+      const n = Math.min(3, Math.ceil(this.scrollVelocity / 2));
+      for (let i = 0; i < n; i++) this.spawnScrollBubble();
+    }
+
     for (let i = this.particles.length - 1; i >= 0; i--) {
       const p = this.particles[i];
       p.x += p.vx;
       p.y += p.vy;
-      p.vy += 0.015;
+      p.vy += 0.012;
       p.vx *= 0.99;
-      p.life--;
-      p.opacity = Math.max(0, (p.life / p.maxLife) * 0.6);
-      p.radius *= 0.993;
+      p.life -= 1 / p.maxLife;
+      p.opacity = Math.max(0, p.life * 0.6);
+      p.radius *= 0.995;
 
       if (p.life <= 0 || p.opacity <= 0) {
         this.particles.splice(i, 1);
         continue;
       }
 
+      // Bubble-style particle: faint glassy body, bright rim, tiny specular glint.
+      const r = Math.max(0.4, p.radius);
       this.ctx.beginPath();
-      this.ctx.arc(p.x, p.y, Math.max(0.3, p.radius), 0, Math.PI * 2);
+      this.ctx.arc(p.x, p.y, r, 0, Math.PI * 2);
       this.ctx.fillStyle = accent;
-      this.ctx.globalAlpha = p.opacity;
+      this.ctx.globalAlpha = p.opacity * 0.25;
       this.ctx.fill();
 
       this.ctx.beginPath();
-      this.ctx.arc(p.x, p.y, Math.max(0.3, p.radius * 3), 0, Math.PI * 2);
-      this.ctx.fillStyle = accent;
-      this.ctx.globalAlpha = p.opacity * 0.12;
+      this.ctx.arc(p.x, p.y, r, 0, Math.PI * 2);
+      this.ctx.strokeStyle = accent;
+      this.ctx.lineWidth = 1.1;
+      this.ctx.globalAlpha = p.opacity;
+      this.ctx.stroke();
+
+      this.ctx.beginPath();
+      this.ctx.arc(p.x - r * 0.32, p.y - r * 0.35, r * 0.24, 0, Math.PI * 2);
+      this.ctx.fillStyle = '#ffffff';
+      this.ctx.globalAlpha = p.opacity * 0.9;
       this.ctx.fill();
     }
 

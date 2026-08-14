@@ -35,6 +35,12 @@ export class PhotoComponent {
     .join('')
     .toUpperCase();
 
+  /** Collapsed summary — cut at a sentence boundary so the ellipsis never lands mid-sentence. */
+  protected readonly summaryPreview = ((): string => {
+    const sentences = profile.summary.match(/[^.!?]+[.!?]+/g) ?? [profile.summary];
+    return sentences.slice(0, 3).join(' ').trim();
+  })();
+
   private readonly platformId = inject(PLATFORM_ID);
 
   constructor() {

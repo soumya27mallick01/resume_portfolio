@@ -12,6 +12,7 @@ import { environment } from '../../../../environments/environment';
 type SubmitState = 'idle' | 'sending' | 'success' | 'error';
 
 const MAP_LOCATION = 'New Delhi, India';
+const MAP_ZOOM = 14;
 
 @Component({
   selector: 'app-contact',
@@ -34,8 +35,8 @@ export class ContactComponent {
 
   private buildMapSrc(): SafeResourceUrl {
     const url = environment.googleMapsApiKey
-      ? `https://www.google.com/maps/embed/v1/place?key=${encodeURIComponent(environment.googleMapsApiKey)}&q=${encodeURIComponent(MAP_LOCATION)}&zoom=12`
-      : `https://www.google.com/maps?q=${encodeURIComponent(MAP_LOCATION)}&z=12&output=embed`;
+      ? `https://www.google.com/maps/embed/v1/place?key=${encodeURIComponent(environment.googleMapsApiKey)}&q=${encodeURIComponent(MAP_LOCATION)}&zoom=${MAP_ZOOM}`
+      : `https://www.google.com/maps?q=${encodeURIComponent(MAP_LOCATION)}&z=${MAP_ZOOM}&output=embed`;
     return this.sanitizer.bypassSecurityTrustResourceUrl(url);
   }
 

@@ -220,8 +220,13 @@ img, svg {
 
 .section {
   position: relative;
+  isolation: isolate;
   padding-block: clamp(4rem, 9vw, 7rem);
   scroll-margin-top: var(--nav-height);
+  /* Keep decorative absolutely-positioned cards/chips inside their own
+     section so a previous section's floating content can never bleed into
+     or paint above the next section. */
+  overflow: clip;
 }
 
 .section--targeted::before {

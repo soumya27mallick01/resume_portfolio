@@ -12,61 +12,129 @@
   height: 100vh;
   pointer-events: none;
 }
+
+/* ---------- Water bubble cursor ---------- */
 .cursor-dot {
   position: fixed;
   left: 50%;
   top: 50%;
-  width: 10px;
-  height: 10px;
+  width: 30px;
+  height: 30px;
   border-radius: 50%;
-  background: var(--accent);
-  border: 1.5px solid var(--bg);
-  transform: translate(-50%, -50%) scale(var(--cursor-scale, 1));
   pointer-events: none;
   z-index: 2;
+  transform: translate(-50%, -50%)
+    scale(
+      calc(var(--cursor-scale, 1) * var(--cursor-squish-x, 1)),
+      calc(var(--cursor-scale, 1) * var(--cursor-squish-y, 1))
+    );
   transition:
     width 0.3s cubic-bezier(0.22, 1, 0.36, 1),
     height 0.3s cubic-bezier(0.22, 1, 0.36, 1),
-    background 0.3s ease,
     border-color 0.3s ease,
-    box-shadow 0.3s ease,
-    --cursor-scale 0.15s ease-out;
-  box-shadow: 0 0 8px var(--accent), 0 0 20px color-mix(in srgb, var(--accent) 50%, transparent);
+    opacity 0.25s ease,
+    --cursor-scale 0.15s ease-out,
+    --cursor-squish-x 0.12s ease-out,
+    --cursor-squish-y 0.12s ease-out;
+  /* Glassy bubble body: bright top-left light, accent glow at the base, rim. */
+  background:
+    radial-gradient(circle at 32% 26%, rgba(255, 255, 255, 0.4), rgba(255, 255, 255, 0.06) 42%, transparent 62%),
+    radial-gradient(circle at 74% 80%, color-mix(in srgb, var(--accent) 28%, transparent), transparent 58%),
+    radial-gradient(circle, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.02) 72%);
+  border: 1.5px solid rgba(255, 255, 255, 0.55);
+  box-shadow:
+    0 0 10px color-mix(in srgb, var(--accent) 32%, transparent),
+    inset 0 0 6px rgba(255, 255, 255, 0.16),
+    inset 0 -3px 7px color-mix(in srgb, var(--accent) 16%, transparent),
+    0 4px 12px rgba(0, 0, 0, 0.35);
+  backdrop-filter: blur(1.5px);
+  -webkit-backdrop-filter: blur(1.5px);
+  animation: bubble-wobble 3.2s ease-in-out infinite;
+  will-change: transform, border-radius;
 }
+/* Liquid wobble — the bubble slowly squishes through soft irregular shapes. */
+@keyframes bubble-wobble {
+  0%, 100% { border-radius: 46% 54% 52% 48% / 50% 48% 52% 50%; }
+  33% { border-radius: 53% 47% 45% 55% / 47% 53% 47% 53%; }
+  66% { border-radius: 47% 53% 55% 45% / 53% 47% 53% 47%; }
+}
+/* Specular glint — small bright highlight near the top-left. */
+.cursor-dot::before {
+  content: '';
+  position: absolute;
+  top: 13%;
+  left: 17%;
+  width: 32%;
+  height: 25%;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.92);
+  filter: blur(1px);
+  transform: rotate(-28deg);
+  opacity: 0.85;
+}
+/* Bottom-right light-reflection arc on the glass. */
+.cursor-dot::after {
+  content: '';
+  position: absolute;
+  bottom: 10%;
+  right: 13%;
+  width: 42%;
+  height: 30%;
+  border-radius: 50%;
+  border: 1.5px solid rgba(255, 255, 255, 0.55);
+  border-bottom-color: transparent;
+  border-left-color: transparent;
+  transform: rotate(-16deg);
+  opacity: 0.75;
+}
+
+/* ---------- Outer ripple ring (lags behind the bubble) ---------- */
 .cursor-ring {
   position: fixed;
   left: 50%;
   top: 50%;
-  width: 36px;
-  height: 36px;
+  width: 34px;
+  height: 34px;
   border-radius: 50%;
-  border: 1.5px solid color-mix(in srgb, var(--accent) 50%, transparent);
+  border: 1px solid color-mix(in srgb, var(--accent) 35%, transparent);
   transform: translate(-50%, -50%);
   pointer-events: none;
   z-index: 1;
+  opacity: 0.55;
   transition:
     width 0.35s cubic-bezier(0.22, 1, 0.36, 1),
     height 0.35s cubic-bezier(0.22, 1, 0.36, 1),
     border-color 0.3s ease,
-    background 0.3s ease,
-    box-shadow 0.3s ease,
     opacity 0.3s ease;
+  animation: bubble-ripple 2.8s cubic-bezier(0.22, 1, 0.36, 1) infinite;
 }
+@keyframes bubble-ripple {
+  0% { transform: translate(-50%, -50%) scale(0.8); opacity: 0.5; }
+  60% { transform: translate(-50%, -50%) scale(1.45); opacity: 0; }
+  100% { transform: translate(-50%, -50%) scale(1.45); opacity: 0; }
+}
+
 :host(.cursor-hovering) .cursor-dot {
   width: 40px;
   height: 40px;
-  background: color-mix(in srgb, var(--accent) 15%, transparent);
-  box-shadow: 0 0 20px color-mix(in srgb, var(--accent) 60%, transparent), 0 0 60px color-mix(in srgb, var(--accent) 30%, transparent);
+  border-color: rgba(255, 255, 255, 0.8);
+  box-shadow:
+    0 0 16px color-mix(in srgb, var(--accent) 50%, transparent),
+    inset 0 0 8px rgba(255, 255, 255, 0.22),
+    inset 0 -4px 9px color-mix(in srgb, var(--accent) 22%, transparent),
+    0 6px 16px rgba(0, 0, 0, 0.4);
 }
 :host(.cursor-hovering) .cursor-ring {
-  width: 56px;
-  height: 56px;
-  background: color-mix(in srgb, var(--accent) 8%, transparent);
+  width: 54px;
+  height: 54px;
   border-color: color-mix(in srgb, var(--accent) 60%, transparent);
-  box-shadow: 0 0 16px color-mix(in srgb, var(--accent) 40%, transparent);
 }
+
 @media (prefers-reduced-motion: reduce) {
   .cursor-canvas { display: none; }
   .cursor-dot,
-  .cursor-ring { transition: none; }
+  .cursor-ring {
+    transition: none;
+    animation: none;
+  }
 }

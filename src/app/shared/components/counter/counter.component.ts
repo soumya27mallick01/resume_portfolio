@@ -26,7 +26,10 @@ export class CounterComponent {
   readonly suffix = input('');
   readonly duration = input(1600, { transform: (v: number | string) => Number(v) });
 
-  protected readonly display = computed(() => this.current() + this.suffix());
+  protected readonly display = computed(() => {
+    if (!this.started) return this.value() + this.suffix();
+    return this.current() + this.suffix();
+  });
 
   private readonly current = signal(0);
   private readonly el = inject(ElementRef<HTMLElement>);
@@ -35,6 +38,7 @@ export class CounterComponent {
   constructor() {
     afterNextRender(() => {
       if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        this.started = true;
         this.current.set(this.value());
         return;
       }
@@ -42,8 +46,14 @@ export class CounterComponent {
         (entries) => {
           if (entries[0]?.isIntersecting && !this.started) {
             this.started = true;
-            this.animate();
             observer.disconnect();
+            // Stats already visible on load (hero): keep the real number and
+            // skip the count-up so the SSR value never flashes to 0 first.
+            if (window.scrollY < 80 && this.el.nativeElement.getBoundingClientRect().top < window.innerHeight) {
+              this.current.set(this.value());
+              return;
+            }
+            this.animate();
           }
         },
         { threshold: 0.4 },
@@ -53,6 +63,7 @@ export class CounterComponent {
   }
 
   private animate(): void {
+    this.current.set(0);
     const start = performance.now();
     const from = 0;
     const to = this.value();

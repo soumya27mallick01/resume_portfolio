@@ -120,88 +120,103 @@ export class ProjectsComponent implements OnDestroy {
     if (!pin || !track || count < 2) return () => undefined;
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return () => undefined;
 
-    pin.classList.add('proj-pin--pinned');
-
     let cleanup: (() => void) | null = null;
     let active = true;
-    void Promise.all([import('gsap'), import('gsap/ScrollTrigger')]).then(([{ gsap }, { ScrollTrigger }]) => {
-      if (this.disposed || !active) {
-        pin.classList.remove('proj-pin--pinned');
-        return;
-      }
-      gsap.registerPlugin(ScrollTrigger);
+    void Promise.all([import('gsap'), import('gsap/ScrollTrigger')])
+      .then(([{ gsap }, { ScrollTrigger }]) => {
+        if (this.disposed || !active) return;
+        gsap.registerPlugin(ScrollTrigger);
 
-      const gap = Math.min(44, Math.max(26, Math.round(window.innerHeight * 0.045)));
-      const slot = (j: number): Record<string, string> => ({
-        y: `${j * gap}px`,
-        scale: String(1 - j * 0.055),
-      });
+        const gap = Math.min(44, Math.max(26, Math.round(window.innerHeight * 0.045)));
+        const slot = (j: number): Record<string, string> => ({
+          y: `${j * gap}px`,
+          scale: String(1 - j * 0.055),
+        });
 
-      slides.forEach((card, j) => {
-        gsap.set(card, { ...slot(j), zIndex: count - j, autoAlpha: 1 });
-      });
+        // Only the top card is visible initially. Deeper cards stay hidden so
+        // the translucent glass surfaces can never overlap / bleed through the
+        // active card; each one fades in as it takes over the stage.
+        slides.forEach((card, j) => {
+          gsap.set(card, { ...slot(j), zIndex: count - j, autoAlpha: j === 0 ? 1 : 0 });
+        });
 
-      const timeline = gsap.timeline({
-        defaults: { ease: 'none' },
-        scrollTrigger: {
-          trigger: pin,
-          start: 'top top',
-          end: '+=220%',
-          pin: true,
-          scrub: 0.7,
-          anticipatePin: 1,
-          invalidateOnRefresh: true,
-          onUpdate: (self) => {
-            const last = count - 1;
-            const idx = self.progress >= 1 ? last : Math.round(self.progress * last);
-            this.activeIndex.set(idx);
+        pin.classList.add('proj-pin--pinned');
+
+        const timeline = gsap.timeline({
+          defaults: { ease: 'none' },
+          scrollTrigger: {
+            trigger: pin,
+            start: 'top top',
+            end: '+=220%',
+            pin: true,
+            scrub: 0.7,
+            anticipatePin: 1,
+            invalidateOnRefresh: true,
+            onUpdate: (self) => {
+              const last = count - 1;
+              const idx = self.progress >= 1 ? last : Math.round(self.progress * last);
+              this.activeIndex.set(idx);
+            },
           },
-        },
-      });
+        });
 
-      if (!timeline.scrollTrigger) {
-        pin.classList.remove('proj-pin--pinned');
-        cleanup = null;
-        return;
-      }
+        if (!timeline.scrollTrigger) {
+          pin.classList.remove('proj-pin--pinned');
+          cleanup = null;
+          return;
+        }
 
-      for (let i = 0; i < count - 1; i++) {
-        timeline
-          .to(
-            slides[i],
-            {
-              autoAlpha: 0.05,
-              y: `-${gap * 2.3}px`,
-              scale: 0.9,
-              duration: 0.55,
-              ease: 'power3.in',
-            },
-            i,
-          )
-          .to(
-            slides.slice(i + 1),
-            {
-              y: (_index: number, target: HTMLElement) => {
-                const j = slides.indexOf(target);
-                return `${(j - i - 1) * gap}px`;
+        for (let i = 0; i < count - 1; i++) {
+          timeline
+            .to(
+              slides[i],
+              {
+                autoAlpha: 0,
+                y: `-${gap * 2.3}px`,
+                scale: 0.9,
+                duration: 0.55,
+                ease: 'power3.in',
               },
-              scale: (_index: number, target: HTMLElement) => String(1 - (slides.indexOf(target) - i - 1) * 0.055),
-              duration: 1.05,
-              ease: 'power2.inOut',
-            },
-            i,
-          );
-      }
+              i,
+            )
+            .to(
+              slides[i + 1],
+              {
+                autoAlpha: 1,
+                duration: 0.5,
+                ease: 'power2.out',
+              },
+              i + 0.05,
+            )
+            .to(
+              slides.slice(i + 1),
+              {
+                y: (_index: number, target: HTMLElement) => {
+                  const j = slides.indexOf(target);
+                  return `${(j - i - 1) * gap}px`;
+                },
+                scale: (_index: number, target: HTMLElement) => String(1 - (slides.indexOf(target) - i - 1) * 0.055),
+                duration: 1.05,
+                ease: 'power2.inOut',
+              },
+              i,
+            );
+        }
 
-      requestAnimationFrame(() => ScrollTrigger.refresh());
+        requestAnimationFrame(() => ScrollTrigger.refresh());
 
-      cleanup = () => {
-        active = false;
-        timeline.scrollTrigger?.kill();
-        timeline.kill();
+        cleanup = () => {
+          active = false;
+          timeline.scrollTrigger?.kill();
+          timeline.kill();
+          pin.classList.remove('proj-pin--pinned');
+        };
+      })
+      .catch(() => {
+        // GSAP / ScrollTrigger failed to load — leave the static stacked list
+        // so the cards never render absolutely stacked on top of each other.
         pin.classList.remove('proj-pin--pinned');
-      };
-    });
+      });
 
     return () => {
       cleanup?.();

@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, input } from '@angular/core';
 
-/** Purely decorative 3D morphing gradient blobs + rotating cube & rings behind content. */
+/** Purely decorative morphing gradient blobs + 3D rings behind content. */
 @Component({
   selector: 'app-blob-background',
   changeDetection: ChangeDetectionStrategy.OnPush,

@@ -12,6 +12,7 @@ import { IconComponent } from '../../../shared/components/icon/icon.component';
 import { SectionHeaderComponent } from '../../../shared/components/section-header/section-header.component';
 import { RevealDirective } from '../../../shared/directives/reveal.directive';
 import { scrollToSection } from '../../../utils/scroll';
+import { webglAvailable, createWebGLRenderer } from '../../../utils/webgl';
 
 interface CraftStep {
   icon: string;
@@ -137,6 +138,7 @@ export class CraftComponent implements OnDestroy {
     void (async () => {
       const THREE = await import('three');
       if (this.disposed || !canvas.isConnected) return;
+      if (!webglAvailable()) return;
 
       const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
       const cssVar = (name: string, fallback: string): string =>
@@ -149,13 +151,18 @@ export class CraftComponent implements OnDestroy {
       const camera = new THREE.PerspectiveCamera(50, 1, 0.1, 40);
       camera.position.set(0, 0.2, 7.8);
 
-      renderer = new THREE.WebGLRenderer({
+      const createdRenderer = createWebGLRenderer(() => new THREE.WebGLRenderer({
         canvas,
         alpha: true,
         antialias: true,
         powerPreference: 'high-performance',
-      });
-      renderer.setClearColor(0x000000, 0);
+      }));
+      if (!createdRenderer) {
+        /* WebGL unavailable — the decorative scene is skipped without errors */
+        return;
+      }
+      createdRenderer.setClearColor(0x000000, 0);
+      renderer = createdRenderer;
 
       const world = new THREE.Group();
       scene.add(world);
@@ -354,7 +361,7 @@ export class CraftComponent implements OnDestroy {
         { rootMargin: '150% 0px 150% 0px' },
       );
       viewportObserver.observe(stage);
-    })();
+    })().catch(() => undefined);
 
     return () => {
       cancelAnimationFrame(raf);

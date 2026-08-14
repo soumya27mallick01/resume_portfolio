@@ -10,6 +10,7 @@ import {
 } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import type * as ThreeTypes from 'three';
+import { webglAvailable, createWebGLRenderer } from '../../utils/webgl';
 
 interface CurtainPanel {
   side: 1 | -1;
@@ -52,6 +53,16 @@ export class LoadingScreenComponent implements OnDestroy {
   private readonly platformId = inject(PLATFORM_ID);
   private disposed = false;
   private cleanup: (() => void) | null = null;
+  private sceneRaf = 0;
+  private sceneRenderer: {
+    setClearColor(color: number, alpha: number): void;
+    setSize(width: number, height: number, updateStyle: boolean): void;
+    render(scene: unknown, camera: unknown): void;
+    dispose(): void;
+  } | null = null;
+  private sceneDisposers: (() => void)[] = [];
+  private removeResize: (() => void) | null = null;
+  private curtainCleanup: (() => void) | null = null;
 
   constructor() {
     if (!isPlatformBrowser(this.platformId)) return;
@@ -120,52 +131,65 @@ export class LoadingScreenComponent implements OnDestroy {
   private initCurtain(canvas: HTMLCanvasElement): () => void {
     if (typeof WebGLRenderingContext === 'undefined') return () => undefined;
 
-    let raf = 0;
-    let renderer: {
-      setClearColor(color: number, alpha: number): void;
-      setSize(width: number, height: number, updateStyle: boolean): void;
-      render(scene: unknown, camera: unknown): void;
-      dispose(): void;
-    } | null = null;
-    const disposers: (() => void)[] = [];
-    let removeResize: (() => void) | null = null;
-
     void (async () => {
-      const THREE = await import('three');
-      if (this.disposed || !canvas.isConnected) return;
+      try {
+        await this.setupCurtain(canvas);
+      } catch {
+        // WebGL or Three.js unavailable — reveal the plain overlay instead of
+        // leaving the curtain stuck over the page.
+        this.finish(true);
+      }
+    })().catch(() => {
+      if (!this.revealed()) this.finish(true);
+    });
 
-      const cssVar = (name: string, fallback: string): string =>
-        getComputedStyle(document.documentElement).getPropertyValue(name).trim() || fallback;
-      const accent = cssVar('--accent', '#22d3ee');
-      const accentBright = cssVar('--accent-bright', '#67e8f9');
-      const purple = cssVar('--accent-purple', '#06b6d4');
-      const curtain1 = cssVar('--curtain-1', '#16224f');
-      const curtain2 = cssVar('--curtain-2', '#101a3d');
-      const isLight = (document.documentElement.getAttribute('data-theme') ?? 'dark') === 'light';
+    return () => this.curtainCleanup?.();
+  }
 
-      const hexToRgb01 = (hex: string): [number, number, number] => {
-        const n = Number.parseInt(hex.replace('#', ''), 16);
-        return [((n >> 16) & 255) / 255, ((n >> 8) & 255) / 255, (n & 255) / 255];
-      };
-      const baseTop = hexToRgb01(curtain1);
-      const baseBottom = hexToRgb01(curtain2);
-      const sparkColors = isLight
-        ? [hexToRgb01('#0e7490'), hexToRgb01('#4f46e5'), hexToRgb01('#9333ea')]
-        : [hexToRgb01(accent), hexToRgb01(accentBright), hexToRgb01(purple)];
+  private async setupCurtain(canvas: HTMLCanvasElement): Promise<void> {
+    const THREE = await import('three');
+    if (this.disposed || !canvas.isConnected) return;
+    if (!webglAvailable()) {
+      this.finish(true);
+      return;
+    }
 
-      const dpr = Math.min(window.devicePixelRatio || 1, 2);
-      const scene = new THREE.Scene();
-      const camera = new THREE.OrthographicCamera(-1, 1, 1, -1, -10, 10);
-      camera.position.z = 1;
+    const cssVar = (name: string, fallback: string): string =>
+      getComputedStyle(document.documentElement).getPropertyValue(name).trim() || fallback;
+    const accent = cssVar('--accent', '#22d3ee');
+    const accentBright = cssVar('--accent-bright', '#67e8f9');
+    const purple = cssVar('--accent-purple', '#06b6d4');
+    const curtain1 = cssVar('--curtain-1', '#16224f');
+    const curtain2 = cssVar('--curtain-2', '#101a3d');
+    const isLight = (document.documentElement.getAttribute('data-theme') ?? 'dark') === 'light';
 
-      const renderer3 = new THREE.WebGLRenderer({
-        canvas,
-        alpha: true,
-        antialias: true,
-        powerPreference: 'high-performance',
-      });
-      renderer3.setClearColor(0x000000, 0);
-      renderer = renderer3;
+    const hexToRgb01 = (hex: string): [number, number, number] => {
+      const n = Number.parseInt(hex.replace('#', ''), 16);
+      return [((n >> 16) & 255) / 255, ((n >> 8) & 255) / 255, (n & 255) / 255];
+    };
+    const baseTop = hexToRgb01(curtain1);
+    const baseBottom = hexToRgb01(curtain2);
+    const sparkColors = isLight
+      ? [hexToRgb01('#0e7490'), hexToRgb01('#4f46e5'), hexToRgb01('#9333ea')]
+      : [hexToRgb01(accent), hexToRgb01(accentBright), hexToRgb01(purple)];
+
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    const scene = new THREE.Scene();
+    const camera = new THREE.OrthographicCamera(-1, 1, 1, -1, -10, 10);
+    camera.position.z = 1;
+
+    const renderer3 = createWebGLRenderer(() => new THREE.WebGLRenderer({
+      canvas,
+      alpha: true,
+      antialias: true,
+      powerPreference: 'high-performance',
+    }));
+    if (!renderer3) {
+      this.finish(true);
+      return;
+    }
+    renderer3.setClearColor(0x000000, 0);
+    this.sceneRenderer = renderer3;
 
       const fabricTexture = (): ThreeTypes.CanvasTexture => {
         const texCanvas = document.createElement('canvas');
@@ -202,7 +226,7 @@ export class LoadingScreenComponent implements OnDestroy {
         return tex;
       };
       const fabric = fabricTexture();
-      disposers.push(() => fabric.dispose());
+      this.sceneDisposers.push(() => fabric.dispose());
 
       let panels: CurtainPanel[] = [];
       let panelSprites: ThreeTypes.Mesh[] = [];
@@ -281,7 +305,7 @@ export class LoadingScreenComponent implements OnDestroy {
           mesh.position.set(positionX, 0, 0);
           scene.add(mesh);
           panelSprites.push(mesh);
-          disposers.push(() => {
+          this.sceneDisposers.push(() => {
             geo.dispose();
             mat.dispose();
           });
@@ -329,7 +353,7 @@ export class LoadingScreenComponent implements OnDestroy {
         );
         scene.add(sparkPoints);
         panelSprites.push(sparkPoints as unknown as ThreeTypes.Mesh);
-        disposers.push(() => {
+        this.sceneDisposers.push(() => {
           sparkGeo.dispose();
           (sparkPoints.material as ThreeTypes.Material).dispose();
         });
@@ -351,7 +375,7 @@ export class LoadingScreenComponent implements OnDestroy {
       const rim = new THREE.PointLight(0x67e8f9, 3000, wPx * 0.6, 2);
       rim.position.set(0, hPx * 0.25, 260);
       scene.add(rim);
-      disposers.push(() => {
+      this.sceneDisposers.push(() => {
         ambient.dispose();
         key.dispose();
         fill.dispose();
@@ -368,7 +392,7 @@ build();
         window.setTimeout(() => this.reveal(), 650);
       };
       window.addEventListener('resize', onResize);
-      removeResize = () => window.removeEventListener('resize', onResize);
+      this.removeResize = () => window.removeEventListener('resize', onResize);
 
       const easeOutCubic = (p: number): number => 1 - Math.pow(1 - p, 3);
 
@@ -443,16 +467,15 @@ build();
       const tick = (time: number): void => {
         if (this.disposed) return;
         render(time);
-        raf = requestAnimationFrame(tick);
+        this.sceneRaf = requestAnimationFrame(tick);
       };
-      raf = requestAnimationFrame(tick);
-    })();
-
-    return () => {
-      cancelAnimationFrame(raf);
-      removeResize?.();
-      for (const dispose of disposers) dispose();
-      renderer?.dispose();
-    };
+      this.sceneRaf = requestAnimationFrame(tick);
+      this.curtainCleanup = () => {
+        cancelAnimationFrame(this.sceneRaf);
+        this.removeResize?.();
+        for (const dispose of this.sceneDisposers) dispose();
+        this.sceneRenderer?.dispose();
+        this.sceneRenderer = null;
+      };
   }
 }

@@ -11,7 +11,7 @@ import { ScrollSpyService } from './core/services/scroll-spy.service';
 import { ScrollProgressService } from './core/services/scroll-progress.service';
 import { ConnectivityService } from './core/services/connectivity.service';
 import { SmoothScrollService } from './core/services/smooth-scroll.service';
-import { ThreeSceneComponent } from './shared/components/three-scene/three-scene.component';
+import { BubblesBackgroundComponent } from './shared/components/bubbles-background/bubbles-background.component';
 import { NavbarComponent } from './layout/navbar/navbar.component';
 import { FooterComponent } from './layout/footer/footer.component';
 import { FloatingActionsComponent } from './layout/floating-actions/floating-actions.component';
@@ -34,7 +34,7 @@ const AS_PATH_KEY = 'as-path';
     LoadingScreenComponent,
     ScrollProgressComponent,
     CustomCursorComponent,
-    ThreeSceneComponent,
+    BubblesBackgroundComponent,
   ],
   templateUrl: './app.html',
   styleUrls: ['./app.css'],
@@ -50,15 +50,17 @@ export class App {
     const connectivity = inject(ConnectivityService);
     const smoothScroll = inject(SmoothScrollService);
 
-    if (isPlatformBrowser(platformId)) {
-      const asPath = sessionStorage.getItem(AS_PATH_KEY);
-      if (asPath) {
-        sessionStorage.removeItem(AS_PATH_KEY);
-        void router.navigateByUrl(asPath).catch(() => undefined);
-      }
-    }
-
     afterNextRender(() => {
+      // 404.html on GitHub Pages stashes the requested deep link in
+      // sessionStorage before redirecting to the SPA root. Navigate once the
+      // initial route has settled so this can't race the router's first nav.
+      if (isPlatformBrowser(platformId)) {
+        const asPath = sessionStorage.getItem(AS_PATH_KEY);
+        if (asPath) {
+          sessionStorage.removeItem(AS_PATH_KEY);
+          void router.navigateByUrl(asPath).catch(() => undefined);
+        }
+      }
       progress.init();
       connectivity.init();
       scrollSpy.init();

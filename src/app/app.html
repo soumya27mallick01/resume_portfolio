@@ -1,5 +1,5 @@
 <a class="skip-link" href="#main-content">Skip to main content</a>
-<app-three-scene />
+<app-bubbles-background />
 <app-scroll-progress />
 <app-loading-screen />
 <app-custom-cursor />
@@ -7,7 +7,9 @@
 <router-outlet />
 <app-footer />
 <app-floating-actions />
-<app-command-palette />
+@defer (on idle) {
+  <app-command-palette />
+}
 
 @if (!connectivity.isOnline()) {
   <a class="offline-banner" routerLink="/offline" aria-live="polite">

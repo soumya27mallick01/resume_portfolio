@@ -14,6 +14,7 @@ import { IconComponent } from '../../../shared/components/icon/icon.component';
 import { SectionHeaderComponent } from '../../../shared/components/section-header/section-header.component';
 import { RevealDirective } from '../../../shared/directives/reveal.directive';
 import type * as ThreeTypes from 'three';
+import { webglAvailable, createWebGLRenderer } from '../../../utils/webgl';
 
 interface BlogChip {
   label: string;
@@ -119,6 +120,7 @@ export class BlogComponent implements OnDestroy {
     void (async () => {
       const THREE = await import('three');
       if (this.disposed || !canvas.isConnected) return;
+      if (!webglAvailable()) return;
 
       const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
       const cssVar = (name: string, fallback: string): string =>
@@ -131,13 +133,18 @@ export class BlogComponent implements OnDestroy {
       const camera = new THREE.PerspectiveCamera(48, 1, 0.1, 40);
       camera.position.set(0, 0.1, 8);
 
-      renderer = new THREE.WebGLRenderer({
+      const createdRenderer = createWebGLRenderer(() => new THREE.WebGLRenderer({
         canvas,
         alpha: true,
         antialias: true,
         powerPreference: 'high-performance',
-      });
-      renderer.setClearColor(0x000000, 0);
+      }));
+      if (!createdRenderer) {
+        /* WebGL unavailable — the decorative scene is skipped without errors */
+        return;
+      }
+      createdRenderer.setClearColor(0x000000, 0);
+      renderer = createdRenderer;
 
       const group = new THREE.Group();
       group.scale.setScalar(1.15);
@@ -328,7 +335,7 @@ export class BlogComponent implements OnDestroy {
         { rootMargin: '150% 0px 150% 0px' },
       );
       viewportObserver.observe(stage);
-    })();
+    })().catch(() => undefined);
 
     return () => {
       cancelAnimationFrame(raf);

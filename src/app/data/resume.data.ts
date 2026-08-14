@@ -42,7 +42,7 @@ export const profile: Profile = {
 
 export const stats: Stat[] = [
   { value: 5, suffix: '+', label: 'Years of Experience' },
-  { value: 4, suffix: '', label: 'Enterprise Applications' },
+  { value: 4, suffix: '', label: 'Platforms Delivered' },
   { value: 3, suffix: '', label: 'Government Platforms' },
   { value: 20, suffix: '+', label: 'Technologies' },
 ];

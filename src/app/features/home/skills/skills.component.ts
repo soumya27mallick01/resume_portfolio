@@ -20,15 +20,22 @@ export class SkillsComponent {
   protected readonly skillGroups = skillGroups;
   protected readonly activeIndex = signal(0);
   protected readonly paused = signal(false);
+  /** Narrow viewports show only the active card so coverflow cards can't overlap it. */
+  protected readonly compact = signal(false);
 
   private readonly platformId = inject(PLATFORM_ID);
   private readonly el = inject(ElementRef<HTMLElement>);
   private inView = true;
   private timer: ReturnType<typeof setInterval> | null = null;
+  private media: MediaQueryList | null = null;
+  private readonly onCompactChange = (e: MediaQueryListEvent): void => this.compact.set(e.matches);
 
   constructor() {
     if (!isPlatformBrowser(this.platformId)) return;
     afterNextRender(() => {
+      this.media = window.matchMedia('(max-width: 760px)');
+      this.compact.set(this.media.matches);
+      this.media.addEventListener('change', this.onCompactChange);
       if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
       const io = new IntersectionObserver(([entry]) => {
         this.inView = entry.isIntersecting;
@@ -42,6 +49,7 @@ export class SkillsComponent {
 
   ngOnDestroy(): void {
     if (this.timer !== null) clearInterval(this.timer);
+    this.media?.removeEventListener('change', this.onCompactChange);
   }
 
   protected next(): void {
@@ -68,19 +76,22 @@ export class SkillsComponent {
   protected cardTransform(i: number): string {
     const d = this.delta(i);
     const base = 'translate(-50%, -50%)';
+    if (this.compact()) return base;
     if (d === 0) return base + ' translateZ(0) rotateY(0deg) scale(1)';
     if (Math.abs(d) === 1) {
-      return base + ` translateX(${d * 58}%) translateZ(-200px) rotateY(${-d * 42}deg) scale(0.9)`;
+      // Push neighbors back and to the side so their surfaces stay clear of the
+      // active card's text while still hinting at the carousel depth.
+      return base + ` translateX(${d * 66}%) translateZ(-240px) rotateY(${-d * 46}deg) scale(0.88)`;
     }
-    return base + ` translateX(${d * 125}%) translateZ(-380px) rotateY(${-d * 32}deg) scale(0.72)`;
+    return base + ` translateX(${d * 125}%) translateZ(-420px) rotateY(${-d * 32}deg) scale(0.72)`;
   }
 
   protected cardOpacity(i: number): number {
     const a = Math.abs(this.delta(i));
-    return a === 0 ? 1 : a === 1 ? 0.55 : 0;
+    return this.compact() ? (a === 0 ? 1 : 0) : a === 0 ? 1 : a === 1 ? 0.18 : 0;
   }
 
   protected cardZ(i: number): number {
-    return 10 - Math.abs(this.delta(i));
+    return this.compact() ? (i === this.activeIndex() ? 10 : 1) : 10 - Math.abs(this.delta(i));
   }
 }

@@ -1,0 +1,146 @@
+{
+  "configVersion": 1,
+  "timestamp": 1786961906186,
+  "index": "/resume_portfolio/index.csr.html",
+  "assetGroups": [
+    {
+      "name": "app",
+      "installMode": "prefetch",
+      "updateMode": "prefetch",
+      "cacheQueryOptions": {
+        "ignoreVary": true
+      },
+      "urls": [
+        "/resume_portfolio/chunk-2KG5WRPL.js",
+        "/resume_portfolio/chunk-3T6CHJNI.js",
+        "/resume_portfolio/chunk-763K23DB.js",
+        "/resume_portfolio/chunk-7CGTOI24.js",
+        "/resume_portfolio/chunk-EMS5ECN7.js",
+        "/resume_portfolio/chunk-ER57UF7Z.js",
+        "/resume_portfolio/chunk-FL2DWWSV.js",
+        "/resume_portfolio/chunk-IUDQ4Z5L.js",
+        "/resume_portfolio/chunk-KMFF4CA3.js",
+        "/resume_portfolio/chunk-MILKX4F6.js",
+        "/resume_portfolio/chunk-OYF7VGHA.js",
+        "/resume_portfolio/chunk-QCC4NXMM.js",
+        "/resume_portfolio/chunk-QCYASVS3.js",
+        "/resume_portfolio/chunk-UEQDXQKQ.js",
+        "/resume_portfolio/chunk-WCOXEPCZ.js",
+        "/resume_portfolio/chunk-XFATSXEG.js",
+        "/resume_portfolio/chunk-YWPUYDNN.js",
+        "/resume_portfolio/chunk-ZFQ3J4ZD.js",
+        "/resume_portfolio/favicon.ico",
+        "/resume_portfolio/index.html",
+        "/resume_portfolio/main-XPNOCDOC.js",
+        "/resume_portfolio/manifest.webmanifest",
+        "/resume_portfolio/styles-JWHHEX5Y.css"
+      ],
+      "patterns": []
+    },
+    {
+      "name": "assets",
+      "installMode": "lazy",
+      "updateMode": "prefetch",
+      "cacheQueryOptions": {
+        "ignoreVary": true
+      },
+      "urls": [
+        "/resume_portfolio/assets/icons/apple-touch-icon.png",
+        "/resume_portfolio/assets/icons/brands-sprite.svg",
+        "/resume_portfolio/assets/icons/icon-192.png",
+        "/resume_portfolio/assets/icons/icon-512.png",
+        "/resume_portfolio/assets/og-image.svg",
+        "/resume_portfolio/assets/photo/.gitkeep",
+        "/resume_portfolio/assets/photo/portfolioPoster.jpg",
+        "/resume_portfolio/assets/photo/portfolioVideo.mp4",
+        "/resume_portfolio/assets/photo/portfolioVideo1.png",
+        "/resume_portfolio/assets/photo/portfolio_pose_separate_1.jpg",
+        "/resume_portfolio/assets/photo/portfolio_pose_separate_2.jpg",
+        "/resume_portfolio/assets/photo/portfolio_pose_separate_3.jpg",
+        "/resume_portfolio/assets/photo/portfolio_pose_separate_4.jpg",
+        "/resume_portfolio/assets/photo/profile.png",
+        "/resume_portfolio/assets/photo/soumyaVideo.mp4",
+        "/resume_portfolio/assets/photo/video.mp4",
+        "/resume_portfolio/assets/photo/videoImg.png",
+        "/resume_portfolio/assets/resume/SoumyaKumarMallick_Resume.pdf"
+      ],
+      "patterns": []
+    },
+    {
+      "name": "fonts",
+      "installMode": "lazy",
+      "updateMode": "lazy",
+      "cacheQueryOptions": {
+        "ignoreVary": true
+      },
+      "urls": [],
+      "patterns": [
+        "https:\\/\\/fonts\\.googleapis\\.com\\/.*",
+        "https:\\/\\/fonts\\.gstatic\\.com\\/.*"
+      ]
+    }
+  ],
+  "dataGroups": [],
+  "hashTable": {
+    "/resume_portfolio/assets/icons/apple-touch-icon.png": "444faffe10dd44476890380b4df3543d21b113fc",
+    "/resume_portfolio/assets/icons/brands-sprite.svg": "7c75aa6f2da7255e200de350edbf7dc645ccdc28",
+    "/resume_portfolio/assets/icons/icon-192.png": "5327e0dc632e4ad0a809896e5836d8f4c1bd24fb",
+    "/resume_portfolio/assets/icons/icon-512.png": "39a7e795404ca4503ed8c96b427092dde25cd183",
+    "/resume_portfolio/assets/og-image.svg": "f5b0b9a50f2bc08347639bce6fdb21f061f68d58",
+    "/resume_portfolio/assets/photo/.gitkeep": "da39a3ee5e6b4b0d3255bfef95601890afd80709",
+    "/resume_portfolio/assets/photo/portfolioPoster.jpg": "85db59f208fcef7f4ce3b6dcd6b8e5885cce05c1",
+    "/resume_portfolio/assets/photo/portfolioVideo.mp4": "d88b75bbe62d2be8ba4291944c31b8cad323fa19",
+    "/resume_portfolio/assets/photo/portfolioVideo1.png": "409e7e8deb1be9cdd417b6bc515033cba2d6d046",
+    "/resume_portfolio/assets/photo/portfolio_pose_separate_1.jpg": "4fba5677ccc44f9e482bb6afc2186f24aee63986",
+    "/resume_portfolio/assets/photo/portfolio_pose_separate_2.jpg": "c38366634ab448f20046563e0800c40de4cfd285",
+    "/resume_portfolio/assets/photo/portfolio_pose_separate_3.jpg": "bb30ef86ad2a5f8708aa90f5298a296ab8a4aa04",
+    "/resume_portfolio/assets/photo/portfolio_pose_separate_4.jpg": "9dc5d85797521ca44f10f6a528671e9c20698d7e",
+    "/resume_portfolio/assets/photo/profile.png": "05b7c6bbfc2c1aad5ba1b043819ee63c87a71470",
+    "/resume_portfolio/assets/photo/soumyaVideo.mp4": "ac520739a69e9e6544b458f175eee9b09c84eb68",
+    "/resume_portfolio/assets/photo/video.mp4": "e375c18c29daf219f7450e6be027e75fadc01fe9",
+    "/resume_portfolio/assets/photo/videoImg.png": "ce1093c95ce7af2019a3aa40882a2850947e7daa",
+    "/resume_portfolio/assets/resume/SoumyaKumarMallick_Resume.pdf": "400e49395a184f0a9471df1b79a4e246266f67fb",
+    "/resume_portfolio/chunk-2KG5WRPL.js": "a8e68edb211e733004e90d22e5b1c8a04ca494e0",
+    "/resume_portfolio/chunk-3T6CHJNI.js": "75f89598e2a8b32e6ae50626cc280fbec0996585",
+    "/resume_portfolio/chunk-763K23DB.js": "4be7927168cd80f13ced9aa8548439ec4126a849",
+    "/resume_portfolio/chunk-7CGTOI24.js": "954b4bf8780b6c8d5e5f27a66127bb5e575b53dd",
+    "/resume_portfolio/chunk-EMS5ECN7.js": "7642672605589ee0e725512d4c6384ec34984658",
+    "/resume_portfolio/chunk-ER57UF7Z.js": "590fcd70d8dc6be09aca8abc1b5c8e47faccb1f9",
+    "/resume_portfolio/chunk-FL2DWWSV.js": "47ebd684c83eaed2f6f8a94a15095b77d35c0c0b",
+    "/resume_portfolio/chunk-IUDQ4Z5L.js": "9cbd20d9813ea47c574a4c7bd7de8d6573567da5",
+    "/resume_portfolio/chunk-KMFF4CA3.js": "8a91a6f057d09a4d208c92ac4d392d47e4e56d41",
+    "/resume_portfolio/chunk-MILKX4F6.js": "cbba7aca220e83ad5b0caeea15daeac9ae6ee309",
+    "/resume_portfolio/chunk-OYF7VGHA.js": "96476cb7dbabe488c4fc364028869a47c6f0e36e",
+    "/resume_portfolio/chunk-QCC4NXMM.js": "194161f538bc182b7ac0b920417b1d86f6e2d8e9",
+    "/resume_portfolio/chunk-QCYASVS3.js": "5f384e7619cdbdd6636f5e11e71cd75e987b91d2",
+    "/resume_portfolio/chunk-UEQDXQKQ.js": "2d7c0aedfd94c0c10dec83bfaaf2c190d4a991a7",
+    "/resume_portfolio/chunk-WCOXEPCZ.js": "a794178f8500ac52e677257f799d82955ccce1b4",
+    "/resume_portfolio/chunk-XFATSXEG.js": "cbe859d5c96597fec7b39f1a2552238019025405",
+    "/resume_portfolio/chunk-YWPUYDNN.js": "5ddc4ed6fe103c9c84b08bc0f0ad1808a4904da9",
+    "/resume_portfolio/chunk-ZFQ3J4ZD.js": "cb4ec811f52ef65194182b62ffcfe8570f8ea91a",
+    "/resume_portfolio/favicon.ico": "9c39f434fe1261f68c5e3eefdf734630d99c5670",
+    "/resume_portfolio/index.html": "5968c6e0ad6a9c3e88c57aa71bb88251d4c970cd",
+    "/resume_portfolio/main-XPNOCDOC.js": "73678718ec870dc6aca0817dfe0eb08f720d2590",
+    "/resume_portfolio/manifest.webmanifest": "3184e837bfaf965b73920448702675bec7ef98bd",
+    "/resume_portfolio/styles-JWHHEX5Y.css": "3fca9b901f8719c1e6aa4c2df53486c41c178dde"
+  },
+  "navigationUrls": [
+    {
+      "positive": true,
+      "regex": "^\\/$"
+    },
+    {
+      "positive": true,
+      "regex": "^\\/blog\\/[^/]*$"
+    },
+    {
+      "positive": true,
+      "regex": "^\\/offline$"
+    },
+    {
+      "positive": true,
+      "regex": "^\\/[^/]*$"
+    }
+  ],
+  "navigationRequestStrategy": "performance"
+}

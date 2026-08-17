@@ -1,0 +1,30 @@
+{
+  "name": "Soumya Kumar Mallick — Senior Frontend Developer",
+  "short_name": "Soumya Mallick",
+  "description": "Portfolio of Soumya Kumar Mallick — Senior Frontend Developer specializing in Angular, React.js and TypeScript for enterprise web applications.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#050816",
+  "theme_color": "#050816",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "assets/icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "assets/icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "assets/icons/apple-touch-icon.png",
+      "sizes": "180x180",
+      "type": "image/png"
+    }
+  ]
+}

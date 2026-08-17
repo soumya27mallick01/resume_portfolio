@@ -1,0 +1,1 @@
+var n=null;function r(o){n=o}var l=72;function t(o){n?n.scrollTo(o,{duration:1.1}):window.scrollTo({top:o,behavior:"smooth"})}function s(o){let e=document.getElementById(o);if(!e)return;n&&n.resize();let i=e.getBoundingClientRect().top+window.scrollY-l;t(i)}function c(){t(0)}export{r as a,s as b,c};

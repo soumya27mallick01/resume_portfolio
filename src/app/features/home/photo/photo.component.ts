@@ -1,4 +1,14 @@
-import { ChangeDetectionStrategy, Component, PLATFORM_ID, afterNextRender, inject, signal } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  ElementRef,
+  PLATFORM_ID,
+  afterNextRender,
+  effect,
+  inject,
+  signal,
+  viewChild,
+} from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import { profile } from '../../../data/resume.data';
 import { IconComponent } from '../../../shared/components/icon/icon.component';
@@ -26,7 +36,7 @@ export class PhotoComponent {
   protected readonly profile = profile;
   protected readonly photoSrc = 'assets/photo/profile.png';
   protected readonly photoHint = 'assets/photo/profile.png';
-  protected readonly videoSrc = 'assets/photo/portfolioVideo.png';
+  protected readonly videoSrc = 'assets/photo/portfolioVideo.mp4';
   protected readonly photoOk = signal(true);
   protected readonly flipped = signal(false);
   protected readonly expanded = signal(false);
@@ -48,9 +58,21 @@ export class PhotoComponent {
   })();
 
   private readonly platformId = inject(PLATFORM_ID);
+  private readonly portfolioVideo = viewChild<ElementRef<HTMLVideoElement>>('portfolioVideo');
 
   constructor() {
     if (!isPlatformBrowser(this.platformId)) return;
+
+    effect(() => {
+      const video = this.portfolioVideo()?.nativeElement;
+      if (!video) return;
+      if (this.flipped()) {
+        video.play().catch(() => undefined);
+      } else {
+        video.pause();
+      }
+    });
+
     afterNextRender(() => {
       if (this.photoOk()) {
         const img = new Image();

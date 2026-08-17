@@ -36,13 +36,16 @@
             <div class="photo__shade" aria-hidden="true"></div>
           </div>
           <div class="photo__face photo__face--back">
-            <img
-              class="photo__back-img"
+            <video
+              #portfolioVideo
+              class="photo__back-video"
               [src]="videoSrc"
-              alt="Portfolio video"
-              draggable="false"
-              loading="lazy"
-            />
+              poster="assets/photo/portfolioVideo1.png"
+              muted
+              loop
+              playsinline
+              preload="metadata"
+            ></video>
             <div class="photo__back-shade" aria-hidden="true"></div>
           </div>
         </div>

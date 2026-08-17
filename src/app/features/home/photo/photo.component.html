@@ -11,13 +11,19 @@
       <div class="photo__ring" aria-hidden="true"></div>
 
       <div class="photo__frame" appTilt [maxTilt]="7">
-        <div class="photo__inner" [class.photo__inner--flipped]="flipped()">
+        <div
+          class="photo__inner"
+          [class.photo__inner--flipped]="flipped()"
+          (click)="toggleFlip()"
+          (dragstart)="$event.preventDefault()"
+        >
           <div class="photo__face photo__face--front">
             @if (photoOk()) {
               <img
                 class="photo__img"
                 [src]="photoSrc"
                 alt="{{ profile.firstName }} portrait"
+                draggable="false"
                 (error)="onPhotoError()"
               />
             } @else {
@@ -30,11 +36,21 @@
             <div class="photo__shade" aria-hidden="true"></div>
           </div>
           <div class="photo__face photo__face--back">
-            <img class="photo__back-img" [src]="videoSrc" alt="Portfolio video" loading="lazy" />
+            <img
+              class="photo__back-img"
+              [src]="videoSrc"
+              alt="Portfolio video"
+              draggable="false"
+              loading="lazy"
+            />
             <div class="photo__back-shade" aria-hidden="true"></div>
           </div>
         </div>
         <div class="photo__shine" aria-hidden="true"></div>
+        <span class="photo__hint" aria-hidden="true">
+          <app-icon name="refresh" [size]="12" />
+          {{ flipped() ? 'Click to flip back' : 'Click to flip' }}
+        </span>
         <button
           type="button"
           class="photo__flip"

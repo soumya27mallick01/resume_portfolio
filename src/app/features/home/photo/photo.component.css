@@ -71,6 +71,11 @@
   transform-style: preserve-3d;
   transform: translateZ(24px);
   transition: transform 0.8s cubic-bezier(0.22, 1, 0.36, 1);
+  cursor: pointer;
+  user-drag: none;
+  -webkit-user-drag: none;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
 }
 .photo__inner--flipped {
   transform: translateZ(24px) rotateY(180deg);
@@ -83,6 +88,8 @@
   background: linear-gradient(160deg, var(--surface-2), var(--bg));
   backface-visibility: hidden;
   -webkit-backface-visibility: hidden;
+  user-drag: none;
+  -webkit-user-drag: none;
 }
 .photo__face--back {
   transform: rotateY(180deg);
@@ -92,6 +99,9 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
+  pointer-events: none;
+  user-drag: none;
+  -webkit-user-drag: none;
 }
 .photo__back-shade {
   position: absolute;
@@ -105,6 +115,9 @@
   height: 100%;
   object-fit: cover;
   filter: saturate(1.05) contrast(1.02);
+  pointer-events: none;
+  user-drag: none;
+  -webkit-user-drag: none;
 }
 .photo__fallback {
   display: flex;
@@ -168,6 +181,39 @@
   background-position: 120% 0;
   animation: photo-shine 7s ease-in-out infinite;
   pointer-events: none;
+}
+.photo__hint {
+  position: absolute;
+  left: 50%;
+  bottom: 16px;
+  transform: translateX(-50%);
+  z-index: 3;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.4rem 0.9rem;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--bg) 75%, transparent);
+  border: 1px solid var(--border);
+  backdrop-filter: blur(10px) saturate(150%);
+  -webkit-backdrop-filter: blur(10px) saturate(150%);
+  color: var(--text-muted);
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.35s ease, transform 0.35s var(--ease-out);
+}
+.photo__inner:hover ~ .photo__hint,
+.photo__flip:hover ~ .photo__hint,
+.photo__hint:hover {
+  opacity: 1;
+}
+.photo__hint app-icon {
+  color: var(--accent);
 }
 .photo__flip {
   position: absolute;

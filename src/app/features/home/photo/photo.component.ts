@@ -24,8 +24,8 @@ import { TiltDirective } from '../../../shared/directives/tilt.directive';
 })
 export class PhotoComponent {
   protected readonly profile = profile;
-  protected readonly photoSrc = 'assets/photo/profile.jpg';
-  protected readonly photoHint = 'assets/photo/profile.jpg';
+  protected readonly photoSrc = 'assets/photo/profile.png';
+  protected readonly photoHint = 'assets/photo/profile.png';
   protected readonly photoOk = signal(true);
   protected readonly expanded = signal(false);
 

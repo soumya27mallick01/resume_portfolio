@@ -26,8 +26,14 @@ export class PhotoComponent {
   protected readonly profile = profile;
   protected readonly photoSrc = 'assets/photo/profile.png';
   protected readonly photoHint = 'assets/photo/profile.png';
+  protected readonly videoSrc = 'assets/photo/portfolioVideo.png';
   protected readonly photoOk = signal(true);
+  protected readonly flipped = signal(false);
   protected readonly expanded = signal(false);
+
+  protected toggleFlip(): void {
+    this.flipped.set(!this.flipped());
+  }
 
   protected readonly initials = profile.firstName
     .split(' ')

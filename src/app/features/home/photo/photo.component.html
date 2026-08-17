@@ -11,24 +11,39 @@
       <div class="photo__ring" aria-hidden="true"></div>
 
       <div class="photo__frame" appTilt [maxTilt]="7">
-        <div class="photo__inner">
-          @if (photoOk()) {
-            <img
-              class="photo__img"
-              [src]="photoSrc"
-              alt="{{ profile.firstName }} portrait"
-              (error)="onPhotoError()"
-            />
-          } @else {
-            <div class="photo__fallback">
-              <span class="photo__fallback-initials" aria-hidden="true">{{ initials }}</span>
-              <p class="photo__fallback-note">Add your photo at {{ photoHint }}</p>
-            </div>
-          }
-          <div class="photo__scanline" aria-hidden="true"></div>
-          <div class="photo__shade" aria-hidden="true"></div>
+        <div class="photo__inner" [class.photo__inner--flipped]="flipped()">
+          <div class="photo__face photo__face--front">
+            @if (photoOk()) {
+              <img
+                class="photo__img"
+                [src]="photoSrc"
+                alt="{{ profile.firstName }} portrait"
+                (error)="onPhotoError()"
+              />
+            } @else {
+              <div class="photo__fallback">
+                <span class="photo__fallback-initials" aria-hidden="true">{{ initials }}</span>
+                <p class="photo__fallback-note">Add your photo at {{ photoHint }}</p>
+              </div>
+            }
+            <div class="photo__scanline" aria-hidden="true"></div>
+            <div class="photo__shade" aria-hidden="true"></div>
+          </div>
+          <div class="photo__face photo__face--back">
+            <img class="photo__back-img" [src]="videoSrc" alt="Portfolio video" loading="lazy" />
+            <div class="photo__back-shade" aria-hidden="true"></div>
+          </div>
         </div>
         <div class="photo__shine" aria-hidden="true"></div>
+        <button
+          type="button"
+          class="photo__flip"
+          [class.photo__flip--flipped]="flipped()"
+          (click)="toggleFlip()"
+          [attr.aria-label]="flipped() ? 'Show portrait photo' : 'Show portfolio video'"
+        >
+          <app-icon name="refresh" [size]="15" />
+        </button>
       </div>
 
       <div class="photo__chip photo__chip--1" aria-hidden="true">
